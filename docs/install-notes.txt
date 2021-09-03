@@ -1,0 +1,33 @@
+
+
+1. install database system
+
+apt install postgresql postgresql-contrib
+
+2. create sbms database
+
+postgres=# create database sbms;
+CREATE DATABASE
+
+postgres=# \c sbms
+You are now connected to database "sbms" as user "postgres".
+sbms=#
+
+-- create user: sbms_rest_api ---
+create role sbms_rest_api;
+ALTER USER sbms_rest_api PASSWORD 'sbms_rest_api_pwd';
+ALTER USER sbms_rest_api LOGIN;
+ALTER USER sbms_rest_api SUPERUSER;
+
+-- list schemas:
+   \dn[S+] [PATTERN]      list schemas
+
+Input/Output
+  \copy ...              perform SQL COPY with data stream to the client host
+  \echo [STRING]         write string to standard output
+  \i FILE                execute commands from file
+  \ir FILE               as \i, but relative to location of current script
+  \o [FILE]              send all query results to file or |pipe
+  \qecho [STRING]        write string to query output stream (see \o)
+
+run sql files from sqlcode folder
