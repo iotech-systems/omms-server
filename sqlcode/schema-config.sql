@@ -1,6 +1,5 @@
 
--- DROP SCHEMA config;
-CREATE SCHEMA config AUTHORIZATION sbms_admin;
+
 
 -- Drop table
 -- DROP TABLE config.meter_alarms;

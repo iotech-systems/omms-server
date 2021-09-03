@@ -1,5 +1,4 @@
--- DROP SCHEMA streams;
-CREATE SCHEMA streams AUTHORIZATION postgres;
+
 
 -- Drop table
 -- DROP TABLE streams.alarms;

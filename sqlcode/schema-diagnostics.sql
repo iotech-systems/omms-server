@@ -1,5 +1,4 @@
--- DROP SCHEMA "diagnostics";
-CREATE SCHEMA "diagnostics" AUTHORIZATION postgres;
+
 
 -- Drop table
 -- DROP TABLE "diagnostics".edge_pings;
