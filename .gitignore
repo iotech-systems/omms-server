@@ -3,7 +3,7 @@
 .idea/
 
 # exclude sbmslib folder
-sbmslib*
+*.sbmslib
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
