@@ -2,6 +2,7 @@
 
 import datetime
 import flask as f
+import setproctitle
 import flask_restful as fr
 import core.data.inProcStore as store
 # import routes
@@ -28,4 +29,5 @@ store.inProcStore.addKeyVal("AppStart", datetime.time())
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if __name__ == "__main__":
+   setproctitle.setproctitle("sbms-rest-api")
    app.run(host="0.0.0.0", port=8082, debug=True)
