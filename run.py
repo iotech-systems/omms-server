@@ -9,7 +9,7 @@ from routes import api_alarmReport, api_kWhReport, \
    api_pingPong, api_streamer
 
 
-APP_NAME = "sbms_gate"
+APP_NAME = "sbms-rest-api-server"
 app = f.Flask(APP_NAME)
 restApi = fr.Api(app)
 
