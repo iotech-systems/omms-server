@@ -13,7 +13,7 @@ class dbConfig(object):
       try:
          with open(CONN_STRING_FILE, "r") as file:
             CONN_STRING = file.read().strip()
-         if CONN_STRING is (None, ""):
+         if CONN_STRING in (None, ""):
             raise Exception("BadDatabaseConnectionString")
          # - - - -
          return psycopg2.connect(CONN_STRING)
