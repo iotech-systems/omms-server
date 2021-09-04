@@ -1,5 +1,4 @@
 
-import json
 import codecs
 import flask_restful as fr
 from sbmslib.shared.utils.jsonx import jsonx
