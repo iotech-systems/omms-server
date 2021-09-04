@@ -3,7 +3,7 @@ import psycopg2
 
 
 # CONN_STRING = "host=192.168.40.106 dbname=sbms_db user=sbms_admin password=abcd1234@@"
-CONN_STRING_FILE = "conf/dbconn.string"
+CONN_STRING_FILE = "config/dbconn.string"
 
 
 class dbConfig(object):
