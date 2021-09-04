@@ -1,5 +1,10 @@
+
 #PyCharm
 .idea/
+
+# exclude sbmslib folder
+sbmslib/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
