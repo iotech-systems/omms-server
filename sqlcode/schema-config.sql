@@ -41,3 +41,6 @@ CREATE TABLE config.meters (
 	dts_created timestamp NOT NULL DEFAULT now(),
 	CONSTRAINT meters_unique UNIQUE (edge_name, bus_type, bus_address)
 );
+
+
+ALTER SEQUENCE config.meters_meter_dbid_seq RESTART WITH 1000;
