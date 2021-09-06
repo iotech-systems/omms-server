@@ -1,5 +1,7 @@
 
 import codecs, flask
+import json
+
 import flask_restful as fr
 from sbmslib.shared.utils.jsonx import jsonx
 import core.data.databaseOps as dbOps
@@ -27,14 +29,15 @@ class api_streamer(fr.Resource):
 
    @staticmethod
    def get():
-      jsonBuff = ""
+      jsonStr = None
       try:
          streamTbl: str = str(flask.request.args.get("streamTbl"))
          meterDBID: str = str(flask.request.args.get("meterDBID"))
          db: dbOps.databaseOps = dbOps.databaseOps()
-         jsonBuff = db.read_lastFromStreamTbl(streamTbl, meterDBID)
+         rowObj = db.read_lastFromStreamTbl(streamTbl, meterDBID)
+         jsonStr = json.dumps(rowObj)
       except Exception as e:
          print(e)
       finally:
-         return flask.Response(response=jsonBuff, status=200
+         return flask.Response(response=jsonStr, status=200
             , content_type="application/json")

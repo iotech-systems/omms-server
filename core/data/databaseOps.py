@@ -1,4 +1,5 @@
 
+import json
 from typing import List
 import core.data.dbCore as dbCore
 from sbmslib.shared.core.registerNames import registerNames as rn
@@ -69,25 +70,19 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
-   def get_allMeters(self) -> str:
+   def get_allMeters(self):
       qry = "select array_to_json(array_agg(row_to_json(t))) from" \
          " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
          " m.meter_type from config.meters m) t;"
       # -- run query --
-      if len(self.dbCore.run_query_fetch1(qry)) == 1:
-         return self.dbCore.run_query_fetch1(qry)[0]
-      else:
-         return ""
+      return self.dbCore.run_query_fetch1(qry)
 
    def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> str:
       qry = f"select row_to_json(t) from"\
          f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}"\
          f" order by reading_dts_utc desc limit 1) t;"
       # -- run query --
-      if len(self.dbCore.run_query_fetch1(qry)) == 1:
-         return self.dbCore.run_query_fetch1(qry)[0]
-      else:
-         return ""
+      return self.dbCore.run_query_fetch1(qry)
 
    def __save_kwhrs__(self, jObj):
       # - - - - - - - -

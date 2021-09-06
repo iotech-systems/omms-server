@@ -1,4 +1,4 @@
-
+import json
 import logging
 import flask
 import flask_restful as fr
@@ -12,7 +12,8 @@ class api_getMeters(fr.Resource):
       try:
          cType = "application/json; charset=utf8"
          db: dbOps.databaseOps = dbOps.databaseOps()
-         jsonBuff = db.get_allMeters()
-         return flask.Response(jsonBuff, content_type=cType)
+         rowObj = db.get_allMeters()
+         jsonStr = json.dumps(rowObj)
+         return flask.Response(jsonStr, content_type=cType)
       except Exception as e:
          logging.error(e)
