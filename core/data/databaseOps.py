@@ -43,10 +43,10 @@ class databaseOps(object):
          f" and t.\"level\" = '{r.level}' and t.alarm_tag = '{r.alarm_tag}' and status=2" \
          f" order by t.row_ins_dts desc limit 1;"
       db: dbCore.dbCore = dbCore.dbCore()
-      row = db.run_query_fetch1(sel)
-      if row is None:
+      scalar = db.run_qry_fetch_scalar(sel)
+      if scalar is None:
          return "YES"
-      return str(row[0]).upper()
+      return str(scalar).upper()
 
    def save_ping(self, ip: str, hostName: str):
       ins = f"insert into diagnostics.edge_pings values ('{ip}', '{hostName}', default);"
@@ -70,19 +70,19 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
-   def get_allMeters(self):
+   def get_allMeters(self) -> [object, False]:
       qry = "select array_to_json(array_agg(row_to_json(t))) from" \
          " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
          " m.meter_type from config.meters m) t;"
-      # -- run query --
-      return self.dbCore.run_query_fetch1(qry)
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
 
-   def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> str:
+   def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> [object, False]:
       qry = f"select row_to_json(t) from"\
          f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}"\
          f" order by reading_dts_utc desc limit 1) t;"
-      # -- run query --
-      return self.dbCore.run_query_fetch1(qry)
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
 
    def __save_kwhrs__(self, jObj):
       # - - - - - - - -
@@ -153,4 +153,5 @@ class databaseOps(object):
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
-      return int(self.dbCore.run_query_fetch1(qry)[0])
+      return int(self.dbCore.run_qry_fetch_scalar(qry))
+

@@ -1,7 +1,5 @@
 
-import codecs, flask
-import json
-
+import codecs, flask, json
 import flask_restful as fr
 from sbmslib.shared.utils.jsonx import jsonx
 import core.data.databaseOps as dbOps
@@ -34,8 +32,9 @@ class api_streamer(fr.Resource):
          streamTbl: str = str(flask.request.args.get("streamTbl"))
          meterDBID: str = str(flask.request.args.get("meterDBID"))
          db: dbOps.databaseOps = dbOps.databaseOps()
-         rowObj = db.read_lastFromStreamTbl(streamTbl, meterDBID)
-         jsonStr = json.dumps(rowObj)
+         resObj = db.read_lastFromStreamTbl(streamTbl, meterDBID)
+         if resObj is not None:
+            jsonStr = json.dumps(resObj)
       except Exception as e:
          print(e)
       finally:
