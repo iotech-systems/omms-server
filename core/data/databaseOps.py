@@ -69,16 +69,25 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
-   def get_allMeters(self):
+   def get_allMeters(self) -> str:
       qry = "select array_to_json(array_agg(row_to_json(t))) from" \
-         " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address, m.meter_type from config.meters m)t;"
-      return str(self.dbCore.run_query_fetch1(qry)[0])
+         " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
+         " m.meter_type from config.meters m) t;"
+      # -- run query --
+      if len(self.dbCore.run_query_fetch1(qry)) == 1:
+         return self.dbCore.run_query_fetch1(qry)[0]
+      else:
+         return ""
 
-   def read_lastFromStreamTbl(self, streamTbl, meterDBID):
+   def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> str:
       qry = f"select row_to_json(t) from"\
          f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}"\
          f" order by reading_dts_utc desc limit 1) t;"
-      return str(self.dbCore.run_query_fetch1(qry)[0])
+      # -- run query --
+      if len(self.dbCore.run_query_fetch1(qry)) == 1:
+         return self.dbCore.run_query_fetch1(qry)[0]
+      else:
+         return ""
 
    def __save_kwhrs__(self, jObj):
       # - - - - - - - -
