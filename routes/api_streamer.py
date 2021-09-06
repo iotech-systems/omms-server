@@ -27,11 +27,14 @@ class api_streamer(fr.Resource):
 
    @staticmethod
    def get():
+      jsonBuff = ""
       try:
          streamTbl: str = str(flask.request.args.get("streamTbl"))
          meterDBID: str = str(flask.request.args.get("meterDBID"))
          db: dbOps.databaseOps = dbOps.databaseOps()
          jsonBuff = db.read_lastFromStreamTbl(streamTbl, meterDBID)
-         return flask.Response(jsonBuff, "application/json")
       except Exception as e:
          print(e)
+      finally:
+         return flask.Response(response=jsonBuff, status=200
+            , content_type="application/json")

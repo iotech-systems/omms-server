@@ -32,4 +32,4 @@ class api_dbinfo(fr.Resource):
             , "dbConnString": connStr
             , "dbStatus": dbStatus}
          jsonBuff = json.dumps(buff)
-         return flask.Response(jsonBuff, content_type="text/json")
+         return flask.Response(jsonBuff, content_type="application/json")
