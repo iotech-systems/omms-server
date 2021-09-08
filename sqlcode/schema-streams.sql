@@ -1,7 +1,6 @@
 
-
 -- Drop table
--- DROP TABLE streams.alarms;
+DROP TABLE streams.alarms;
 CREATE TABLE streams.alarms (
 	alarm_dbid serial NOT NULL,
 	fk_meter_dbid int4 NOT NULL,
@@ -13,11 +12,11 @@ CREATE TABLE streams.alarms (
 	row_ins_dts timestamp NOT NULL DEFAULT now()
 );
 
--- Drop table
--- DROP TABLE streams.basic_pwr_stats;
+DROP TABLE streams.basic_pwr_stats;
 CREATE TABLE streams.basic_pwr_stats (
 	fk_meter_dbid int4 NOT NULL,
 	reading_dts_utc timestamp NOT NULL,
+	readtime_secs numeric(6, 3) not null,
 	grid_freq_hz numeric(4, 2) NULL,
 	line_volts numeric(6, 2) NULL,
 	l1_volts numeric(6, 2) NULL,
@@ -38,14 +37,15 @@ CREATE TABLE streams.basic_pwr_stats (
 	row_ins_dts_utc timestamp NOT NULL DEFAULT now()
 );
 
--- Drop table
--- DROP TABLE streams.kwhrs;
+
+DROP TABLE streams.kwhrs;
 CREATE TABLE streams.kwhrs (
 	fk_meter_dbid int4 NOT NULL,
 	reading_dts_utc timestamp NOT NULL,
-	total numeric(10, 2) NOT NULL,
-	l1 numeric(10, 2) NULL,
-	l2 numeric(10, 2) NULL,
-	l3 numeric(10, 2) NULL,
+	readtime_secs numeric(6, 3) not null,
+	total_kwhrs numeric(10, 2) NOT NULL,
+	l1_kwhrs numeric(10, 2) NULL,
+	l2_kwhrs numeric(10, 2) NULL,
+	l3_kwhrs numeric(10, 2) NULL,
 	row_ins_dts timestamp NOT NULL DEFAULT now()
 );

@@ -88,6 +88,10 @@ class databaseOps(object):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
       dbid: int = self.__get_meterDBID__(jph)
+      # -- get frame read time --
+      readTimeSecs = 0.0
+      if "readTimeSecs" in jObj:
+         readTimeSecs: float = float(jObj["readTimeSecs"])
       # - - - - - - - -
       lst: List[kWhReading] = []
       readings: [] = jObj["readings"]
@@ -100,8 +104,8 @@ class databaseOps(object):
       l3: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L3_TotalActiveEnergy)
       # - - - - - - - -
       ins = f"insert into streams.kwhrs " \
-         f"values({dbid}, cast('{jph.dtsUtc}' as timestamp), {total.regVal}, {l1.regVal}" \
-         f", {l2.regVal}, {l3.regVal}, default);"
+         f"values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {total.regVal}," \
+         f" {l1.regVal}, {l2.regVal}, {l3.regVal}, default);"
       # - - - - - - - -
       db: dbCore.dbCore = dbCore.dbCore()
       val = db.run_insert(ins)
@@ -116,6 +120,10 @@ class databaseOps(object):
       readings: [] = jObj["readings"]
       for d in readings:
          lst.append(kWhReading.kWhReading(d))
+      # -- get frame read time --
+      readTimeSecs = 0.0
+      if "readTimeSecs" in jObj:
+         readTimeSecs: float = float(jObj["readTimeSecs"])
       # - - - - - - - - -
       hz: kWhReading.kWhReading = sysutils.findRegister(lst, rn.GridFreqHz)
       # voltage
@@ -140,11 +148,11 @@ class databaseOps(object):
       l3_pwr_f: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L3_PowerFactor)
       # - - - - - - - -
       ins = f"insert into streams.basic_pwr_stats" \
-            f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {hz.regVal}, {lv.regVal}" \
-            f", {l1_v.regVal}, {l2_v.regVal}, {l3_v.regVal}, {t_amps.regVal}, {l1_a.regVal}" \
-            f", {l2_a.regVal}, {l3_a.regVal}, {t_act_pwr.regVal}, {l1_act_pwr.regVal}" \
-            f", {l2_act_pwr.regVal}, {l3_act_pwr.regVal}, {t_pwr_f.regVal}, {l1_pwr_f.regVal}" \
-            f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
+         f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {hz.regVal}, {lv.regVal}" \
+         f", {l1_v.regVal}, {l2_v.regVal}, {l3_v.regVal}, {t_amps.regVal}, {l1_a.regVal}" \
+         f", {l2_a.regVal}, {l3_a.regVal}, {t_act_pwr.regVal}, {l1_act_pwr.regVal}" \
+         f", {l2_act_pwr.regVal}, {l3_act_pwr.regVal}, {t_pwr_f.regVal}, {l1_pwr_f.regVal}" \
+         f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
       # - - - - - - - -
       db: dbCore.dbCore = dbCore.dbCore()
       val = db.run_insert(ins)
