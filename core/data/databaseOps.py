@@ -79,8 +79,14 @@ class databaseOps(object):
 
    def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> [object, False]:
       qry = f"select row_to_json(t) from"\
-         f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}"\
+         f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}" \
          f" order by reading_dts_utc desc limit 1) t;"
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
+   def get_org(self):
+      qry = "select array_to_json(array_agg(row_to_json(t)))" \
+         " from (select o.* from config.org o) t;"
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
