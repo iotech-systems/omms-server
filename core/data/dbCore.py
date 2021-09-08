@@ -33,12 +33,17 @@ class dbCore(object):
       except Exception as e:
          print(e)
 
-   def run_query_fetch1(self, sel: str):
+   def run_qry_fetch_scalar(self, sel: str) -> [object, None]:
       try:
          with self.conn.cursor() as cur:
             cur.execute(sel)
+            """ Fetch the next row of a query result set, returning a single tuple, 
+               or None when no more data is available: """
             row = cur.fetchone()
          # - - - -
-         return row
+         if len(row) > 0:
+            return row[0]
+         else:
+            return None
       except Exception as e:
          print(e)

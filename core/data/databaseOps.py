@@ -1,4 +1,5 @@
 
+import json
 from typing import List
 import core.data.dbCore as dbCore
 from sbmslib.shared.core.registerNames import registerNames as rn
@@ -42,10 +43,10 @@ class databaseOps(object):
          f" and t.\"level\" = '{r.level}' and t.alarm_tag = '{r.alarm_tag}' and status=2" \
          f" order by t.row_ins_dts desc limit 1;"
       db: dbCore.dbCore = dbCore.dbCore()
-      row = db.run_query_fetch1(sel)
-      if row is None:
+      scalar = db.run_qry_fetch_scalar(sel)
+      if scalar is None:
          return "YES"
-      return str(row[0]).upper()
+      return str(scalar).upper()
 
    def save_ping(self, ip: str, hostName: str):
       ins = f"insert into diagnostics.edge_pings values ('{ip}', '{hostName}', default);"
@@ -69,10 +70,34 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
+   def get_allMeters(self) -> [object, False]:
+      qry = "select array_to_json(array_agg(row_to_json(t))) from" \
+         " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
+         " m.meter_type, m.circuit_label from config.meters m) t;"
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
+   def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> [object, False]:
+      qry = f"select row_to_json(t) from"\
+         f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}" \
+         f" order by reading_dts_utc desc limit 1) t;"
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
+   def get_org(self):
+      qry = "select array_to_json(array_agg(row_to_json(t)))" \
+         " from (select o.* from config.org o) t;"
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    def __save_kwhrs__(self, jObj):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
       dbid: int = self.__get_meterDBID__(jph)
+      # -- get frame read time --
+      readTimeSecs = 0.0
+      if "readTimeSecs" in jObj:
+         readTimeSecs: float = float(jObj["readTimeSecs"])
       # - - - - - - - -
       lst: List[kWhReading] = []
       readings: [] = jObj["readings"]
@@ -85,8 +110,8 @@ class databaseOps(object):
       l3: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L3_TotalActiveEnergy)
       # - - - - - - - -
       ins = f"insert into streams.kwhrs " \
-         f"values({dbid}, cast('{jph.dtsUtc}' as timestamp), {total.regVal}, {l1.regVal}" \
-         f", {l2.regVal}, {l3.regVal}, default);"
+         f"values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {total.regVal}," \
+         f" {l1.regVal}, {l2.regVal}, {l3.regVal}, default);"
       # - - - - - - - -
       db: dbCore.dbCore = dbCore.dbCore()
       val = db.run_insert(ins)
@@ -101,6 +126,10 @@ class databaseOps(object):
       readings: [] = jObj["readings"]
       for d in readings:
          lst.append(kWhReading.kWhReading(d))
+      # -- get frame read time --
+      readTimeSecs = 0.0
+      if "readTimeSecs" in jObj:
+         readTimeSecs: float = float(jObj["readTimeSecs"])
       # - - - - - - - - -
       hz: kWhReading.kWhReading = sysutils.findRegister(lst, rn.GridFreqHz)
       # voltage
@@ -125,11 +154,11 @@ class databaseOps(object):
       l3_pwr_f: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L3_PowerFactor)
       # - - - - - - - -
       ins = f"insert into streams.basic_pwr_stats" \
-            f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {hz.regVal}, {lv.regVal}" \
-            f", {l1_v.regVal}, {l2_v.regVal}, {l3_v.regVal}, {t_amps.regVal}, {l1_a.regVal}" \
-            f", {l2_a.regVal}, {l3_a.regVal}, {t_act_pwr.regVal}, {l1_act_pwr.regVal}" \
-            f", {l2_act_pwr.regVal}, {l3_act_pwr.regVal}, {t_pwr_f.regVal}, {l1_pwr_f.regVal}" \
-            f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
+         f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {hz.regVal}, {lv.regVal}" \
+         f", {l1_v.regVal}, {l2_v.regVal}, {l3_v.regVal}, {t_amps.regVal}, {l1_a.regVal}" \
+         f", {l2_a.regVal}, {l3_a.regVal}, {t_act_pwr.regVal}, {l1_act_pwr.regVal}" \
+         f", {l2_act_pwr.regVal}, {l3_act_pwr.regVal}, {t_pwr_f.regVal}, {l1_pwr_f.regVal}" \
+         f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
       # - - - - - - - -
       db: dbCore.dbCore = dbCore.dbCore()
       val = db.run_insert(ins)
@@ -138,4 +167,5 @@ class databaseOps(object):
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
-      return int(self.dbCore.run_query_fetch1(qry)[0])
+      return int(self.dbCore.run_qry_fetch_scalar(qry))
+
