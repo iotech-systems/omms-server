@@ -33,4 +33,4 @@ store.inProcStore.addKeyVal("AppStart", datetime.time())
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if __name__ == "__main__":
    setproctitle.setproctitle("sbms-rest-api")
-   app.run(host="0.0.0.0", port=8082, debug=False)
+   app.run(host="0.0.0.0", port=8282, debug=False)
