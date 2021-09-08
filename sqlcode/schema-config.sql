@@ -60,7 +60,7 @@ CREATE TABLE config.org (
 
 DROP TABLE IF EXISTS config.clients;
 CREATE TABLE config.clients (
-	client_dbid serial4 NOT NULL,
+	client_dbid serial NOT NULL,
 	client_tag varchar(32) NOT NULL,
 	client_name varchar(64) NOT NULL
 );
