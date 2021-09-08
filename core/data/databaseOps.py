@@ -1,5 +1,4 @@
 
-import json
 from typing import List
 import core.data.dbCore as dbCore
 from sbmslib.shared.core.registerNames import registerNames as rn
