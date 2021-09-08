@@ -50,7 +50,7 @@ CREATE TABLE config.meters (
 
 DROP TABLE IF EXISTS config.org;
 CREATE TABLE config.org (
-	entity_dbid int4 NOT NULL DEFAULT nextval('config.orglevels_orglevel_dbid_seq'::regclass),
+	entity_dbid serial NOT NULL,
 	entity_parent_dbid int4 NOT NULL DEFAULT 0,
 	entity_tag varchar(32) NOT NULL,
 	entity_type varchar(32) NOT NULL,
