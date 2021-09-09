@@ -51,8 +51,8 @@ CREATE TABLE config.meters (
 DROP TABLE IF EXISTS config.org;
 CREATE TABLE config.org (
 	entity_dbid serial NOT NULL,
-	entity_parent_dbid int4 NOT NULL DEFAULT 0,
-	entity_tag varchar(32) NOT NULL,
+	entity_pdbid int4 NOT NULL DEFAULT 0,
+	entag varchar(32) NOT NULL,
 	entity_type varchar(32) NOT NULL,
 	entity_desc varchar(128) NULL,
 	CONSTRAINT entity_tag_uq UNIQUE (entity_tag)
