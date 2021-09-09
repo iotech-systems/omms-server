@@ -7,7 +7,8 @@ import flask_restful as fr
 import core.data.inProcStore as store
 # import routes
 from routes import api_alarmReport, api_kWhReport, api_pingPong,\
-   api_streamer, api_info, api_dbInfo, api_getMeters, api_org
+   api_streamer, api_info, api_dbInfo, api_getMeters, api_org,\
+   api_elecRoomMeters
 
 
 APP_NAME = "sbms-rest-api-server"
@@ -24,6 +25,7 @@ restApi.add_resource(api_pingPong.api_pingPong, "/ping")
 restApi.add_resource(api_info.api_info, "/info")
 restApi.add_resource(api_dbInfo.api_dbinfo, "/db-info")
 restApi.add_resource(api_getMeters.api_getMeters, "/meters")
+restApi.add_resource(api_elecRoomMeters.api_getElecRoomMeters, "/elc-room-meters")
 restApi.add_resource(api_org.api_org, "/org")
 
 # store run.py time
