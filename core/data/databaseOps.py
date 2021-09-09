@@ -79,7 +79,8 @@ class databaseOps(object):
    def get_elecRoomMeters(self, tag: str) -> [object, False]:
       qry = f"select array_to_json(array_agg(row_to_json(t))) from" \
          f" (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
-         f" m.meter_type, m.circuit_tag from config.meters m where m.org_entity_tag = '{tag}') t;"
+         f" m.meter_type, m.circuit_tag, m.meter_maker, m.meter_model from config.meters m " \
+         f" where m.org_entity_tag = '{tag}') t;"
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
