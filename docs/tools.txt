@@ -1,0 +1,3 @@
+
+SELECT c.relname FROM pg_class c WHERE c.relkind = 'S';
+alter sequence config.meters_meter_dbid_seq restart with 1000;

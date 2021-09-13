@@ -33,6 +33,8 @@ class api_streamer(fr.Resource):
       try:
          badInput = (None, "None")
          streamTbl: str = str(flask.request.args.get("streamTbl"))
+         if not streamTbl.startswith("__"):
+            streamTbl = f"__{streamTbl}"
          meterDBID: str = str(flask.request.args.get("meterDBID"))
          if (streamTbl in badInput) or (meterDBID in badInput):
             raise Exception("MissingInput")
@@ -45,6 +47,7 @@ class api_streamer(fr.Resource):
             status = 200
       except Exception as e:
          logging.error(e)
+         jsonStr = f'{"Error": "{e}"}'
       finally:
          return flask.Response(response=jsonStr, status=status
             , content_type="application/json")

@@ -16,11 +16,9 @@ app = f.Flask(APP_NAME)
 restApi = fr.Api(app)
 
 
-# put(s)
 restApi.add_resource(api_kWhReport.api_kWhReport, "/report-kwh")
 restApi.add_resource(api_alarmReport.api_alarmReport, "/report-alarm")
 restApi.add_resource(api_streamer.api_streamer, "/streamer")
-# get(s)
 restApi.add_resource(api_pingPong.api_pingPong, "/ping")
 restApi.add_resource(api_info.api_info, "/info")
 restApi.add_resource(api_dbInfo.api_dbinfo, "/db-info")
@@ -35,4 +33,4 @@ store.inProcStore.addKeyVal("AppStart", datetime.time())
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if __name__ == "__main__":
    setproctitle.setproctitle("sbms-rest-api")
-   app.run(host="0.0.0.0", port=8282, debug=False)
+   app.run(host="0.0.0.0", port=8082, debug=False)

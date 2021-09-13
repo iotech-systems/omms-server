@@ -121,8 +121,20 @@ class databaseOps(object):
          f" {l1.regVal}, {l2.regVal}, {l3.regVal}, default);"
       # - - - - - - - -
       db: dbCore.dbCore = dbCore.dbCore()
-      val = db.run_insert(ins)
-      return val
+      rowcount = db.run_insert(ins)
+      # - - - - - - - -
+      if rowcount == 1:
+         ttlHrs = 2
+         tblName = "__kwhrs"
+         ins = f"insert into streams.{tblName}" \
+            f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {total.regVal}," \
+            f" {l1.regVal}, {l2.regVal}, {l3.regVal}, default);"
+         # - - - - - - - -
+         # db: dbCore.dbCore = dbCore.dbCore()
+         val = db.run_insert(ins)
+         self.__clear_live_tbl(tblName, ttlHrs)
+      # - - - - - - - -
+      return rowcount
 
    def __save_basicPwrStats__(self, jObj):
       # - - - - - - - - -
@@ -159,7 +171,7 @@ class databaseOps(object):
       l1_pwr_f: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L1_PowerFactor)
       l2_pwr_f: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L2_PowerFactor)
       l3_pwr_f: kWhReading.kWhReading = sysutils.findRegister(lst, rn.L3_PowerFactor)
-      # - - - - - - - -
+      # - - insert into long term table - -
       ins = f"insert into streams.basic_pwr_stats" \
          f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {hz.regVal}, {lv.regVal}" \
          f", {l1_v.regVal}, {l2_v.regVal}, {l3_v.regVal}, {t_amps.regVal}, {l1_a.regVal}" \
@@ -168,11 +180,38 @@ class databaseOps(object):
          f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
       # - - - - - - - -
       db: dbCore.dbCore = dbCore.dbCore()
-      val = db.run_insert(ins)
-      return val
+      rowcount = db.run_insert(ins)
+      # - - insert into live table - -
+      if rowcount == 1:
+         ttlHrs = 2
+         tblName = "__basic_pwr_stats"
+         ins = f"insert into streams.{tblName}" \
+            f" values({dbid}, cast('{jph.dtsUtc}' as timestamp), {readTimeSecs}, {hz.regVal}, {lv.regVal}" \
+            f", {l1_v.regVal}, {l2_v.regVal}, {l3_v.regVal}, {t_amps.regVal}, {l1_a.regVal}" \
+            f", {l2_a.regVal}, {l3_a.regVal}, {t_act_pwr.regVal}, {l1_act_pwr.regVal}" \
+            f", {l2_act_pwr.regVal}, {l3_act_pwr.regVal}, {t_pwr_f.regVal}, {l1_pwr_f.regVal}" \
+            f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
+         # - - best try - -
+         db.run_insert(ins)
+         self.__clear_live_tbl(tblName, ttlHrs)
+      # - - - - - - - - -
+      return rowcount
 
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
       return int(self.dbCore.run_qry_fetch_scalar(qry))
 
+   def __clear_live_tbl(self, tblName: str, ageHrs: int):
+      try:
+         # - - try table name - -
+         if not tblName.startswith("__"):
+            raise Exception(f"BadTableName: {tblName}")
+         # - - - - - -
+         qry = f"delete from streams.{tblName} where" \
+            f" (date_part('hour', timezone('utc', now())) - " \
+            f" date_part('hour', reading_dts_utc)) > {ageHrs};"
+         print(qry)
+         self.dbCore.run_exec(qry)
+      except Exception as e:
+         print(e)
