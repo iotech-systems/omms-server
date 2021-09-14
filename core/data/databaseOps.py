@@ -97,6 +97,9 @@ class databaseOps(object):
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def run_meter_kWhrsReport(self, qry) -> [object, None]:
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    def __save_kwhrs__(self, jObj):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
@@ -200,6 +203,7 @@ class databaseOps(object):
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
+      print(qry)
       return int(self.dbCore.run_qry_fetch_scalar(qry))
 
    def __clear_live_tbl(self, tblName: str, ageHrs: int):

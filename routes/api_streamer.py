@@ -6,7 +6,7 @@ from sbmslib.shared.utils.jsonx import jsonx
 import core.data.databaseOps as dbOps
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class api_streamer(fr.Resource):
 
    @staticmethod

@@ -9,7 +9,13 @@ class dbCore(object):
       self.conn = dbConfig.dbConfig.getConnection()
 
    def run_query(self, query: str):
-      pass
+      try:
+         with self.conn.cursor() as cur:
+            cur.execute(query)
+            rows = cur.fetchall()
+         return rows
+      except Exception as e:
+         print(e)
 
    def run_insert(self, ins: str):
       try:
