@@ -1,16 +1,22 @@
 
+import logging
 from typing import List
 import core.data.dbCore as dbCore
 from sbmslib.shared.core.registerNames import registerNames as rn
+from sbmslib.shared.utils.sysutils import sysutils
 from sbmslib.shared.models import alarmReport, kWhReport,\
    jsonPackageHead, kWhReading
-from sbmslib.shared.utils.sysutils import sysutils
+
+
+logfile = "/opt/iotech/logs/dbops.log"
+level = logging.WARNING
 
 
 class databaseOps(object):
 
    def __init__(self):
       self.dbCore = dbCore.dbCore()
+      logging.basicConfig(filename=logfile, level=level)
 
    def save_kWhRead(self, d: kWhReport.kWhReport):
       # - - - - - - - -
@@ -204,7 +210,7 @@ class databaseOps(object):
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
       dbid = int(self.dbCore.run_qry_fetch_scalar(qry))
-      print(f"edgeName: {jph.edgeName}; dbid: {dbid};")
+      logging.warning(f"edgeName: {jph.edgeName}; dbid: {dbid};")
       return dbid
 
    def __clear_live_tbl(self, tblName: str, ageHrs: int):
