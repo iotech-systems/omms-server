@@ -3,7 +3,9 @@ import logging
 import codecs, flask, json
 import flask_restful as fr
 from sbmslib.shared.utils.jsonx import jsonx
+from sbmslib.shared.api_response import api_response
 import core.data.databaseOps as dbOps
+import routes.api_flask as api_flask
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,14 +18,14 @@ class api_streamer(fr.Resource):
          data = fr.request.data
          # json string
          jsonStr = codecs.decode(data, "UTF-8")
-         print(jsonStr)
          # create model
          jObj = jsonx.getJsonObj(jsonStr)
-         database = dbOps.databaseOps()
-         database.save_streamer_put(jObj)
          # save to database
+         database = dbOps.databaseOps()
+         res = database.save_streamer_put(jObj)
          # - - - - - - - - - - - - - - - - - -
-         return {"val": 2}
+         apiRes = api_response("api_streamer", "put", res[0], res[1])
+         return api_flask.api_flask.jsonResp(apiRes.toJson(), 200)
       except Exception as e:
          return {f"exception: {str(e)}"}
 
@@ -41,7 +43,7 @@ class api_streamer(fr.Resource):
             raise Exception("MissingInput")
          db: dbOps.databaseOps = dbOps.databaseOps()
          resObj = db.read_lastFromStreamTbl(streamTbl, meterDBID)
-         # tag returning data packet
+         # tag returning data packet with the tbl it was targeting
          resObj["streamTbl"] = streamTbl
          if resObj is not None:
             jsonStr = json.dumps(resObj)
@@ -50,5 +52,4 @@ class api_streamer(fr.Resource):
          logging.error(e)
          jsonStr = f'{"Error": "{e}"}'
       finally:
-         return flask.Response(response=jsonStr, status=status
-            , content_type="application/json")
+         return api_flask.api_flask.jsonResp(jsonStr, status)

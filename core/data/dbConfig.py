@@ -1,8 +1,6 @@
 
 import psycopg2
 
-
-# CONN_STRING = "host=192.168.40.106 dbname=sbms_db user=sbms_admin password=abcd1234@@"
 CONN_STRING_FILE = "config/dbconn.string"
 
 
@@ -11,11 +9,13 @@ class dbConfig(object):
    @staticmethod
    def getConnection():
       try:
+         # ignore all lines with #
          with open(CONN_STRING_FILE, "r") as file:
-            CONN_STRING = file.read().strip()
-         if CONN_STRING in (None, ""):
+            lines = file.readlines()
+         lns = [x for x in lines if not x.startswith("#")]
+         if lns[0] in (None, ""):
             raise Exception("BadDatabaseConnectionString")
          # - - - -
-         return psycopg2.connect(CONN_STRING)
+         return psycopg2.connect(lns[0])
       except Exception as e:
          print(e)

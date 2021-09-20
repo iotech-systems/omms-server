@@ -1,5 +1,4 @@
 
-import psycopg2
 import core.data.dbConfig as dbConfig
 
 
@@ -47,9 +46,11 @@ class dbCore(object):
                or None when no more data is available: """
             row = cur.fetchone()
          # - - - -
-         if len(row) > 0:
+         if (row is None) or (len(row) == 0):
+            return None
+         elif len(row) == 1:
             return row[0]
          else:
-            return None
+            raise Exception("TooManyRowsFound!")
       except Exception as e:
          print(e)

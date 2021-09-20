@@ -2,13 +2,14 @@
 import logging
 from typing import List
 import core.data.dbCore as dbCore
+from sbmslib.shared.app_error_codes import appErrorCodes
 from sbmslib.shared.core.registerNames import registerNames as rn
 from sbmslib.shared.utils.sysutils import sysutils
 from sbmslib.shared.models import alarmReport, kWhReport,\
    jsonPackageHead, kWhReading
 
 
-logfile = "/opt/iotech/logs/dbops.log"
+logfile = "logs/dbops.log"
 level = logging.WARNING
 
 
@@ -17,6 +18,7 @@ class databaseOps(object):
    def __init__(self):
       self.dbCore = dbCore.dbCore()
       logging.basicConfig(filename=logfile, level=level)
+      self.meterNotFound = (appErrorCodes.METER_NOT_FOUND, appErrorCodes.METER_NOT_FOUND.name)
 
    def save_kWhRead(self, d: kWhReport.kWhReport):
       # - - - - - - - -
@@ -61,17 +63,19 @@ class databaseOps(object):
       self.dbCore.run_exec(qry)
       return val
 
-   def save_streamer_put(self, jObj: dict):
+   def save_streamer_put(self, jObj: dict) -> (appErrorCodes, str):
       try:
-         streamName = ""
+         streamName: str = ""
          if "streamName" in jObj:
             streamName = jObj["streamName"]
          if streamName == "basicPwrStats":
-            self.__save_basicPwrStats__(jObj)
+            res = self.__save_basicPwrStats__(jObj)
          elif streamName == "kWhrs":
-            self.__save_kwhrs__(jObj)
+            res = self.__save_kwhrs__(jObj)
          else:
-            return streamName
+            return 100, streamName
+         # - - - - - -
+         return res
       except Exception as e:
          print(e)
 
@@ -106,10 +110,12 @@ class databaseOps(object):
    def run_meter_kWhrsReport(self, qry) -> [object, None]:
       return self.dbCore.run_qry_fetch_scalar(qry)
 
-   def __save_kwhrs__(self, jObj):
+   def __save_kwhrs__(self, jObj) -> (int, str):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
       dbid: int = self.__get_meterDBID__(jph)
+      if dbid == 0:
+         return appErrorCodes.METER_NOT_FOUND, None
       # -- get frame read time --
       readTimeSecs = 0.0
       if "readTimeSecs" in jObj:
@@ -143,12 +149,17 @@ class databaseOps(object):
          val = db.run_insert(ins)
          self.__clear_live_tbl(tblName, ttlHrs)
       # - - - - - - - -
-      return rowcount
+      error = appErrorCodes.BAD_DB_INSERT
+      if rowcount == 1:
+         error = appErrorCodes.OK
+      return error, None
 
-   def __save_basicPwrStats__(self, jObj):
+   def __save_basicPwrStats__(self, jObj) -> (appErrorCodes, str):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
       dbid: int = self.__get_meterDBID__(jph)
+      if dbid == 0:  # dbid 0 means meter not found
+         return appErrorCodes.METER_NOT_FOUND, None
       # - - - - - - - -
       lst: List[kWhReading] = []
       readings: [] = jObj["readings"]
@@ -204,13 +215,22 @@ class databaseOps(object):
          db.run_insert(ins)
          self.__clear_live_tbl(tblName, ttlHrs)
       # - - - - - - - - -
-      return rowcount
+      error = appErrorCodes.BAD_DB_INSERT
+      if rowcount == 1:
+         error = appErrorCodes.OK
+      return error, None
 
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
-      dbid = int(self.dbCore.run_qry_fetch_scalar(qry))
-      logging.warning(f"edgeName: {jph.edgeName}; dbid: {dbid};")
+      dbid = self.dbCore.run_qry_fetch_scalar(qry)
+      if dbid is None:
+         logging.warning(f"dbid not found! qry: {qry};")
+         # reset dbid to zero as not found!
+         dbid = 0
+      else:
+         dbid = int(dbid)
+      # return dbid of the meter
       return dbid
 
    def __clear_live_tbl(self, tblName: str, ageHrs: int):
