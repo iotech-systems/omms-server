@@ -140,7 +140,7 @@ class databaseOps(object):
       return rowcount
 
    def __save_basicPwrStats__(self, jObj):
-      # - - - - - - - - -
+      # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
       dbid: int = self.__get_meterDBID__(jph)
       # - - - - - - - -
@@ -203,8 +203,9 @@ class databaseOps(object):
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
-      print(qry)
-      return int(self.dbCore.run_qry_fetch_scalar(qry))
+      dbid = int(self.dbCore.run_qry_fetch_scalar(qry))
+      print(f"edgeName: {jph.edgeName}; dbid: {dbid};")
+      return dbid
 
    def __clear_live_tbl(self, tblName: str, ageHrs: int):
       try:
