@@ -225,7 +225,7 @@ class databaseOps(object):
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
       dbid = self.dbCore.run_qry_fetch_scalar(qry)
       if dbid is None:
-         logging.warning(f"dbid not found! qry: {qry};")
+         # logging.warning(f"dbid not found! qry: {qry};")
          # reset dbid to zero as not found!
          dbid = 0
       else:
@@ -242,7 +242,6 @@ class databaseOps(object):
          qry = f"delete from streams.{tblName} where" \
             f" (date_part('hour', timezone('utc', now())) - " \
             f" date_part('hour', reading_dts_utc)) > {ageHrs};"
-         print(qry)
          self.dbCore.run_exec(qry)
       except Exception as e:
          print(e)
