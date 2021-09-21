@@ -18,6 +18,7 @@ class api_streamer(fr.Resource):
          data = fr.request.data
          # json string
          jsonStr = codecs.decode(data, "UTF-8")
+         print(jsonStr)
          # create model
          jObj = jsonx.getJsonObj(jsonStr)
          # save to database
