@@ -33,5 +33,7 @@ store.inProcStore.addKeyVal("AppStart", datetime.time())
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if __name__ == "__main__":
-   setproctitle.setproctitle("sbms-rest-api")
+   # dump flask info
+   print(f"\n  * flask version: {f.__version__}\n")
+   setproctitle.setproctitle("sbms-api-server")
    app.run(host="0.0.0.0", port=8082, debug=False)
