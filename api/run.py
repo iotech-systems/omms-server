@@ -11,7 +11,7 @@ from routes import api_alarmReport, api_kWhReport, api_pingPong,\
    api_elecRoomMeters, api_report
 
 
-APP_NAME = "sbms-rest-api-server"
+APP_NAME = "sbms-api-server"
 app = f.Flask(APP_NAME)
 restApi = fr.Api(app)
 
