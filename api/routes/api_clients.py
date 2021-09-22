@@ -2,8 +2,8 @@
 import logging
 import codecs, flask, json
 import flask_restful as fr
-import api.core.data.databaseOps as dbOps
-import api.routes.api_flask as api_flask
+import core.data.databaseOps as dbOps
+import routes.api_flask as api_flask
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
