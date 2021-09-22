@@ -122,7 +122,7 @@ class databaseOps(object):
       return rows
 
    def get_allClients(self):
-      sel = "select * from reports.clients c order by c.client_name desc"
+      sel = "select * from reports.clients c order by c.client_name asc"
       qry = self.__json_rows__(sel)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
