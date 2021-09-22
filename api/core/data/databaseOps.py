@@ -112,7 +112,7 @@ class databaseOps(object):
 
    def run_client_kWhrsReport(self, cltTag: str):
       cltMeters: [] = self.__get_client_meters__(cltTag)
-
+      return cltMeters
 
    def get_allClients(self):
       sel = "select * from reports.clients"
