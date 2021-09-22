@@ -16,6 +16,15 @@ class dbCore(object):
       except Exception as e:
          print(e)
 
+   def run_query_fetchone(self, query: str) -> []:
+      try:
+         with self.conn.cursor() as cur:
+            cur.execute(query)
+            row = cur.fetchone()
+         return row
+      except Exception as e:
+         print(e)
+
    def run_insert(self, ins: str):
       try:
          print(ins)
