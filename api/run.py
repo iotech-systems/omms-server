@@ -8,7 +8,7 @@ import core.data.inProcStore as store
 # import routes
 from routes import api_alarmReport, api_kWhReport, api_pingPong,\
    api_streamer, api_info, api_dbInfo, api_getMeters, api_org,\
-   api_elecRoomMeters, api_report, api_clients
+   api_elecRoomMeters, api_report, api_clients, api_elecRoomActiveMeters
 
 
 APP_NAME = "sbms-api-server"
@@ -26,6 +26,7 @@ restApi.add_resource(api_getMeters.api_getMeters, "/meters")
 restApi.add_resource(api_clients.api_clients, "/clients")
 restApi.add_resource(api_report.api_report, "/report")
 restApi.add_resource(api_elecRoomMeters.api_getElecRoomMeters, "/elc-room-meters")
+restApi.add_resource(api_elecRoomActiveMeters.api_elecRoomActiveMeters, "/elc-room-meters-active")
 restApi.add_resource(api_org.api_org, "/org")
 
 # store run.py time

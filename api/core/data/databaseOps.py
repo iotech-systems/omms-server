@@ -95,6 +95,15 @@ class databaseOps(object):
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def get_elecRoomActiveMeters(self, tag: str) -> [object, False]:
+      qry = f"select distinct(bps.fk_meter_dbid) from streams.\"__basic_pwr_stats\" bps " \
+         f" join streams.\"__kwhrs\" k on bps.fk_meter_dbid = k.fk_meter_dbid " \
+         f" join config.meters m on m.meter_dbid = bps.fk_meter_dbid " \
+         f" where m.org_entity_tag = '{tag}'"
+      qry = self.__json_rows__(qry)
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    def read_lastFromStreamTbl(self, streamTbl, meterDBID) -> [object, False]:
       qry = f"select row_to_json(t) from"\
          f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}" \
