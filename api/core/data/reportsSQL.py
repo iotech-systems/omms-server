@@ -2,7 +2,7 @@
 class reportsSQL(object):
 
    @staticmethod
-   def meter_kwhrs(startDate: str, endDate: str, meterDBID: str):
+   def meter_kwhrs(meterDBID: int, startDate: str, endDate: str):
       # drop table vars;
       return f"""drop table if exists vars;
          create temp table vars (vname varchar(16) not null unique, kwhrs float);

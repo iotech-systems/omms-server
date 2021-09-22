@@ -2,10 +2,9 @@
 import logging
 import codecs, flask, json
 import flask_restful as fr
-from sbmslib.shared.utils.jsonx import jsonx
 import core.data.databaseOps as dbOps
-import core.data.reportsSQL as repSQL
 import core.data.sysReports as sysReps
+from routes.api_flask import api_flask
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -23,9 +22,12 @@ class api_report(fr.Resource):
             jsonStr = sr.meter_kwhrs(flask.request)
          # - - - -
          elif reportName == "client-kwhrs":
+            # /report?repName=client-kwhrs&cltTag=nip0011&sDate=2021-08-01&eDate=2021-08-30
             cltTag: str = str(flask.request.args.get("cltTag"))
+            sdate: str = str(flask.request.args.get("sDate"))
+            edate: str = str(flask.request.args.get("eDate"))
             db: dbOps.databaseOps = dbOps.databaseOps()
-            rpt = db.run_client_kWhrsReport(cltTag)
+            rpt = db.run_report_client_kWhrs(cltTag, sdate, edate)
             jsonStr = json.dumps(rpt)
          elif reportName == "place-holder":
             pass
@@ -37,5 +39,4 @@ class api_report(fr.Resource):
          logging.error(e)
          jsonStr = f'{"Error": "{e}"}'
       finally:
-         return flask.Response(response=jsonStr, status=status
-            , content_type="application/json")
+         return api_flask.jsonResp(jsonStr, status)

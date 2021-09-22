@@ -7,6 +7,7 @@ from sbmslib.shared.core.registerNames import registerNames as rn
 from sbmslib.shared.utils.sysutils import sysutils
 from sbmslib.shared.models import alarmReport, kWhReport,\
    jsonPackageHead, kWhReading
+from core.data.reportsSQL import reportsSQL as repSQL
 
 
 logfile = "logs/dbops.log"
@@ -110,9 +111,15 @@ class databaseOps(object):
    def run_meter_kWhrsReport(self, qry) -> [object, None]:
       return self.dbCore.run_qry_fetch_scalar(qry)
 
-   def run_client_kWhrsReport(self, cltTag: str):
+   def run_report_client_kWhrs(self, cltTag: str, sdate: str, edate: str):
+      rows = []
       cltMeters: [] = self.__get_client_meters__(cltTag)
-      return cltMeters
+      for m in cltMeters:
+         dbid, busAdr, mType, cirTag = m
+         qry = repSQL.meter_kwhrs(int(dbid), sdate, edate)
+         row = self.dbCore.run_query(qry)
+         rows.append(row)
+      return rows
 
    def get_allClients(self):
       sel = "select * from reports.clients"
