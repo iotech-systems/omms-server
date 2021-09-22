@@ -24,3 +24,7 @@ class reportsSQL(object):
             (select m.circuit_tag from config.meters m where m.meter_dbid = {meterDBID}) ctag,
             '{startDate}' sdts, '{endDate}' edts, ((select kwhrs from vars where vname = 'e_kwhrs')
                - (select kwhrs from vars where vname = 's_kwhrs')) as kwhrs) t;"""
+
+   @staticmethod
+   def client_kwhrs(sDate: str, eDate: str, cltDBID: int):
+      pass

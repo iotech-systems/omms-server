@@ -7,7 +7,7 @@ class dbCore(object):
    def __init__(self):
       self.conn = dbConfig.dbConfig.getConnection()
 
-   def run_query(self, query: str):
+   def run_query(self, query: str) -> []:
       try:
          with self.conn.cursor() as cur:
             cur.execute(query)

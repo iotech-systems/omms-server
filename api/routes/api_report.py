@@ -23,7 +23,10 @@ class api_report(fr.Resource):
             jsonStr = sr.meter_kwhrs(flask.request)
          # - - - -
          elif reportName == "client-kwhrs":
-            pass
+            cltTag: str = str(flask.request.args.get("cltTag"))
+            db: dbOps.databaseOps = dbOps.databaseOps()
+            rpt = db.run_client_kWhrsReport(cltTag)
+            jsonStr = json.dumps(rpt)
          elif reportName == "place-holder":
             pass
          else:

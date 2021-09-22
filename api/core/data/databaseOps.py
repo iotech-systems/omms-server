@@ -110,6 +110,10 @@ class databaseOps(object):
    def run_meter_kWhrsReport(self, qry) -> [object, None]:
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def run_client_kWhrsReport(self, cltTag: str):
+      cltMeters: [] = self.__get_client_meters__(cltTag)
+
+
    def get_allClients(self):
       sel = "select * from reports.clients"
       qry = self.__json_rows__(sel)
@@ -254,3 +258,10 @@ class databaseOps(object):
    def __json_rows__(self, qry: str):
       return f"select array_to_json(array_agg(row_to_json(t)))" \
          f" from ({qry}) t;"
+
+   def __get_client_meters__(self, cltTag: str) -> []:
+      qry = f"select m.meter_dbid, m.bus_address, m.meter_type, m.circuit_tag from config.meters m" \
+         f" join reports.client_circuits cc on m.circuit_tag = cc.circuit_tag" \
+         f" where cc.client_tag = '{cltTag}';"
+      rows = self.dbCore.run_query(qry)
+      return rows
