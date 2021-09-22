@@ -110,6 +110,11 @@ class databaseOps(object):
    def run_meter_kWhrsReport(self, qry) -> [object, None]:
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def get_allClients(self):
+      sel = "select * from reports.clients"
+      qry = self.__json_rows__(sel)
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    def __save_kwhrs__(self, jObj) -> (int, str):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
@@ -245,3 +250,7 @@ class databaseOps(object):
          self.dbCore.run_exec(qry)
       except Exception as e:
          print(e)
+
+   def __json_rows__(self, qry: str):
+      return f"select array_to_json(array_agg(row_to_json(t)))" \
+         f" from ({qry}) t;"
