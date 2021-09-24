@@ -137,7 +137,7 @@ class databaseOps(object):
 
    def get_histogramData(self, meterDBID: int):
       qry = f"select * from streams.\"__basic_pwr_stats\" t" \
-         f" where t.fk_meter_dbid = {meterDBID}"
+         f" where t.fk_meter_dbid = {meterDBID} order by t.reading_dts_utc asc"
       qry = self.__json_rows__(qry)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
