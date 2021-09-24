@@ -135,6 +135,11 @@ class databaseOps(object):
       qry = self.__json_rows__(sel)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def get_histogramData(self, meterDBID: int):
+      qry = f"select * from streams.\"__basic_pwr_stats\" t" \
+         f" where t.fk_meter_dbid = {meterDBID};"
+      return self.dbCore.run_query(qry)
+
    def __save_kwhrs__(self, jObj) -> (int, str):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)

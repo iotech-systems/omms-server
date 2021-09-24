@@ -14,9 +14,12 @@ class api_histogram(fr.Resource):
       status = 400
       jsonStr = "{\"Error\": \"Unexpected\"}"
       try:
+         meterDBID = flask.request.args.get("mid")
          db: dbOps.databaseOps = dbOps.databaseOps()
+         rows = db.get_histogramData(int(meterDBID))
+         jsonStr = json.dumps(rows)
          status = 200
       except Exception as e:
          logging.error(e)
       finally:
-         api_flask.jsonResp(jsonStr, status)
+         return api_flask.jsonResp(jsonStr, status)
