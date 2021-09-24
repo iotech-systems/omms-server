@@ -17,7 +17,8 @@ class api_histogram(fr.Resource):
          meterDBID = flask.request.args.get("mid")
          db: dbOps.databaseOps = dbOps.databaseOps()
          rows = db.get_histogramData(int(meterDBID))
-         jsonStr = json.dumps(rows)
+         data = {"streamTbl": "__histogram", "rows": rows}
+         jsonStr = json.dumps(data)
          status = 200
       except Exception as e:
          logging.error(e)
