@@ -137,8 +137,9 @@ class databaseOps(object):
 
    def get_histogramData(self, meterDBID: int):
       qry = f"select * from streams.\"__basic_pwr_stats\" t" \
-         f" where t.fk_meter_dbid = {meterDBID};"
-      return self.dbCore.run_query(qry)
+         f" where t.fk_meter_dbid = {meterDBID}"
+      qry = self.__json_rows__(qry)
+      return self.dbCore.run_qry_fetch_scalar(qry)
 
    def __save_kwhrs__(self, jObj) -> (int, str):
       # - - - - - - - -
