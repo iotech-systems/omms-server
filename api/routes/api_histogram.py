@@ -7,7 +7,7 @@ from routes.api_flask import api_flask
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class api_org(fr.Resource):
+class api_histogram(fr.Resource):
 
    @staticmethod
    def get():
