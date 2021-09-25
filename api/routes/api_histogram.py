@@ -1,5 +1,5 @@
 
-import logging
+import logging, codecs
 import flask, json, hashlib
 import flask_restful as fr
 import core.data.databaseOps as dbOps
@@ -17,8 +17,8 @@ class api_histogram(fr.Resource):
          meterDBID = flask.request.args.get("mid")
          db: dbOps.databaseOps = dbOps.databaseOps()
          rows = db.get_histogramData(int(meterDBID))
-         md5 = hashlib.md5(json.dumps(rows))
-         data = {"streamTbl": "__histogram", "md5": md5, "rows": rows}
+         md5 = hashlib.md5(codecs.encode(json.dumps(rows), "utf-8"))
+         data = {"streamTbl": "__histogram", "md5": md5.hexdigest(), "rows": rows}
          jsonStr = json.dumps(data)
          status = 200
       except Exception as e:
