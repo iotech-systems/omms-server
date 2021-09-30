@@ -16,6 +16,9 @@ class dbConfig(object):
          if lns[0] in (None, ""):
             raise Exception("BadDatabaseConnectionString")
          # - - - -
-         return psycopg2.connect(lns[0])
+         conn = psycopg2.connect(lns[0])
+         if conn is None:
+            raise Exception(f"UnableToConnect: {lns[0]}")
+         return conn
       except Exception as e:
          print(e)

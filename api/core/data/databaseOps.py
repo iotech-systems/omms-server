@@ -80,6 +80,17 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
+   """
+      getters
+   """
+
+   def get_allSpaces(self, bTag=None) -> [object, False]:
+      qry = f"select * from reports.spaces"
+      if bTag not in (None, "None", ""):
+         qry = f"select * from reports.spaces t where t.building_tag = '{bTag}'"
+      qry = self.__json_rows__(qry)
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    def get_allMeters(self) -> [object, False]:
       qry = "select array_to_json(array_agg(row_to_json(t))) from" \
          " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
@@ -92,7 +103,7 @@ class databaseOps(object):
          f" (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
          f" m.meter_type, m.circuit_tag, m.meter_maker, m.meter_model, c.max_amps," \
          f" c.voltage from config.meters m join config.circuits c on m.circuit_tag = c.circuit_tag" \
-         f" where m.org_entity_tag = '{tag}') t;"
+         f" where m.elcrm_entag = '{tag}') t;"
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
@@ -100,7 +111,7 @@ class databaseOps(object):
       qry = f"select distinct(bps.fk_meter_dbid) from streams.\"__basic_pwr_stats\" bps " \
          f" join streams.\"__kwhrs\" k on bps.fk_meter_dbid = k.fk_meter_dbid " \
          f" join config.meters m on m.meter_dbid = bps.fk_meter_dbid " \
-         f" where m.org_entity_tag = '{tag}'"
+         f" where m.elcrm_entag = '{tag}'"
       qry = self.__json_rows__(qry)
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
