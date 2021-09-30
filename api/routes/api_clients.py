@@ -23,3 +23,23 @@ class api_clients(fr.Resource):
          jsonStr = f'{"Error": "{e}"}'
       finally:
          return api_flask.api_flask.jsonResp(jsonStr, status)
+
+   @staticmethod
+   def put():
+      try:
+         # get request body; should be json string
+         data = fr.request.data
+         # json string
+         jsonStr = codecs.decode(data, "UTF-8")
+         # create model
+         jObj = jsonx.getJsonObj(jsonStr)
+         # save to database
+         database = dbOps.databaseOps()
+         res = database.save_streamer_put(jObj)
+         # - - - - - - - - - - - - - - - - - -
+         apiRes = api_response("api_streamer", "put", res[0], res[1])
+         return api_flask.api_flask.jsonResp(apiRes.toJson(), 200)
+      except:
+         pass
+      finally:
+         pass
