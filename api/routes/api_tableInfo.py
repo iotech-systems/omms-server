@@ -6,7 +6,8 @@ import core.data.databaseOps as dbOps
 from routes.api_flask import api_flask
 
 
-TBLS = {"0x00": "clients", "0x02": "circuits", "0x04": "meters"}
+TBLS = {"0x00": "clients", "0x02": "circuits", "0x04": "meters", "0x06": "spaces"
+        , "0x08": "client_circuits", "0x10": "client_spaces"}
 
 
 class api_tableInfo(fr.Resource):
