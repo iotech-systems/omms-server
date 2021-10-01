@@ -7,7 +7,7 @@ import routes.api_flask as api_flask
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class api_clients(fr.Resource):
+class api_circuits(fr.Resource):
 
    @staticmethod
    def get():
@@ -15,7 +15,7 @@ class api_clients(fr.Resource):
       jsonStr = "{\"Error\": \"MissingInput\"}"
       try:
          db: dbOps.databaseOps = dbOps.databaseOps()
-         jsonObj = db.get_allClients()
+         jsonObj = db.get_allCircuits()
          jsonStr = json.dumps(jsonObj)
          status = 200
       except Exception as e:
