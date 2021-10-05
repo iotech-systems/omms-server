@@ -7,7 +7,7 @@ import flask_restful as fr
 import core.data.inProcStore as store
 # import routes
 from routes import api_alarmReport, api_kWhReport, api_pingPong, \
-   api_streamer, api_info, api_dbInfo, api_getMeters, api_org, \
+   api_streamer, api_info, api_dbInfo, api_meters, api_org, \
    api_elecRoomMeters, api_report, api_clients, api_elecRoomActiveMeters, \
    api_histogram, api_spaces, api_tableInfo, api_circuits
 
@@ -23,7 +23,7 @@ restApi.add_resource(api_streamer.api_streamer, "/streamer")
 restApi.add_resource(api_pingPong.api_pingPong, "/ping")
 restApi.add_resource(api_info.api_info, "/info")
 restApi.add_resource(api_dbInfo.api_dbinfo, "/db-info")
-restApi.add_resource(api_getMeters.api_getMeters, "/meters")
+restApi.add_resource(api_meters.api_meters, "/meters")
 restApi.add_resource(api_spaces.api_getSpaces, "/spaces")
 restApi.add_resource(api_clients.api_clients, "/clients")
 restApi.add_resource(api_circuits.api_circuits, "/circuits")

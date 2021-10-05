@@ -95,10 +95,12 @@ class databaseOps(object):
       if flags == 0:
          qry = "select array_to_json(array_agg(row_to_json(t))) from" \
             " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
-            " m.meter_type, m.circuit_tag, m.max_amps from config.meters m) t;"
-      else:
+            " m.meter_type, m.circuit_tag from config.meters m) t;"
+      elif flags == 2:
          qry = "select array_to_json(array_agg(row_to_json(t))) from " \
             "(select m.* from config.meters m) t;"
+      else:
+         return ""
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
