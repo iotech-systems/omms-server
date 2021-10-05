@@ -91,10 +91,14 @@ class databaseOps(object):
       qry = self.__json_rows__(qry)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
-   def get_allMeters(self) -> [object, False]:
-      qry = "select array_to_json(array_agg(row_to_json(t))) from" \
-         " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
-         " m.meter_type, m.circuit_tag, m.max_amps from config.meters m) t;"
+   def get_allMeters(self, flags=0) -> [object, False]:
+      if flags == 0:
+         qry = "select array_to_json(array_agg(row_to_json(t))) from" \
+            " (select m.meter_dbid, m.edge_name, m.bus_type, m.bus_address," \
+            " m.meter_type, m.circuit_tag, m.max_amps from config.meters m) t;"
+      else:
+         qry = "select array_to_json(array_agg(row_to_json(t))) from " \
+            "(select m.* from config.meters m) t;"
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
