@@ -63,3 +63,13 @@ class dbCore(object):
             raise Exception("TooManyRowsFound!")
       except Exception as e:
          print(e)
+
+   def run_upsert(self, qry, args: tuple) -> int:
+      try:
+         with self.conn.cursor() as cur:
+            cur.execute(qry, args)
+            rowCnt = cur.rowcount
+            self.conn.commit()
+         return rowCnt
+      except Exception as e:
+         print(e)

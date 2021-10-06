@@ -8,6 +8,7 @@ from sbmslib.shared.utils.sysutils import sysutils
 from sbmslib.shared.models import alarmReport, kWhReport,\
    jsonPackageHead, kWhReading
 from core.data.reportsSQL import reportsSQL as repSQL
+from core.data.configSQL import configSQL as confSQL
 
 
 logfile = "logs/dbops.log"
@@ -80,9 +81,9 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
-   def save_configTablePUT(self, jsonObj):
-      pass
-
+   def save_configTablePUT(self, tblname, dataDict: dict) -> int:
+      qry = confSQL.upsert(tblname, dataDict)
+      return self.dbCore.run_exec(qry)
 
    """
       getters
