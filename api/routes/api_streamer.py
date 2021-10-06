@@ -22,7 +22,7 @@ class api_streamer(fr.Resource):
          jObj = jsonx.getJsonObj(jsonStr)
          # save to database
          database = dbOps.databaseOps()
-         res = database.save_streamer_put(jObj)
+         res = database.save_streamerPUT(jObj)
          # - - - - - - - - - - - - - - - - - -
          apiRes = api_response("api_streamer", "put", res[0], res[1])
          return api_flask.api_flask.jsonResp(apiRes.toJson(), 200)

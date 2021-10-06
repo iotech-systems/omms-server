@@ -64,7 +64,7 @@ class databaseOps(object):
       self.dbCore.run_exec(qry)
       return val
 
-   def save_streamer_put(self, jObj: dict) -> (appErrorCodes, str):
+   def save_streamerPUT(self, jObj: dict) -> (appErrorCodes, str):
       try:
          streamName: str = ""
          if "streamName" in jObj:
@@ -79,6 +79,10 @@ class databaseOps(object):
          return res
       except Exception as e:
          print(e)
+
+   def save_configTablePUT(self, jsonObj):
+      pass
+
 
    """
       getters
