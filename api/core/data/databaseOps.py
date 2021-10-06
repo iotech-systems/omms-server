@@ -166,8 +166,10 @@ class databaseOps(object):
 
    def get_tableInfo(self, tableName):
       qry = f"select column_name colname, data_type dtype, character_maximum_length maxlen," \
-         f" column_default coldef, is_nullable nullok from INFORMATION_SCHEMA.COLUMNS" \
+         f" column_default coldef, is_nullable nullok, comment, ordinal_position" \
+         f" from INFORMATION_SCHEMA.COLUMNS" \
          f" where table_name = '{tableName}'"
+      # -- update query --
       qry = self.__json_rows__(qry)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
