@@ -44,6 +44,6 @@ class configSQL(object):
          qry = f"delete from reports.clients where client_dbid = {dbid};"
       if tblname == "circuits":
          dbid = int(dataDict["circuit_dbid"])
-         qry = f"delete from reports.clients where circuit_dbid = {dbid};"
+         qry = f"delete from config.circuits where circuit_dbid = {dbid};"
       # -- return qry --
       return qry
