@@ -99,8 +99,10 @@ class databaseOps(object):
       elif dl == "circuit-tags":
          qry = "select circuit_dbid, circuit_tag, entag from config.circuits"
       elif dl == "building-tags":
-         qry = "select o.entity_dbid, o.entag , o.entity_desc desc" \
+         qry = "select o.entity_dbid, o.entag, o.entity_desc" \
             " from config.org o where o.entity_type = 'building'"
+      else:
+         pass
       qry = self.__json_rows__(qry)
       # -- return jobj --
       return self.dbCore.run_qry_fetch_scalar(qry)
