@@ -33,6 +33,19 @@ class configSQL(object):
          else:
             qry = f"update config.circuits set (circuit_tag, entag, max_amps, voltage)" \
                f" = ('{tag}', '{entag}', {amps}, {volts}) where circuit_dbid = {dbid};"
+      # -- client_circuits --
+      if tblname == "client_circuits":
+         sep = "::"
+         cir_tag: str = dataDict["circuit_tag"]
+         cir_tag = cir_tag.split(sep=sep)[1].strip()
+         clt_tag: str = dataDict["client_tag"]
+         clt_tag = clt_tag.split(sep=sep)[1].strip()
+         entag: str = dataDict["entag"]
+         entag = entag.split(sep=sep)[1].strip()
+         tmp: str = dataDict["status"]
+         status: int = int(tmp.split(sep=sep)[1].strip())
+         qry = f"insert into reports.client_circuits" \
+            f" values('{clt_tag}', '{entag}', '{cir_tag}', {status})"
       # -- return qry --
       return qry
 

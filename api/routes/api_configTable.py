@@ -6,10 +6,6 @@ import core.data.databaseOps as dbOps
 import routes.api_flask as api_flask
 
 
-TBLS = {"0x00": "clients", "0x02": "circuits", "0x04": "meters", "0x06": "spaces"
-        , "0x08": "client_circuits", "0x10": "client_spaces"}
-
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class api_configTable(fr.Resource):
 
@@ -19,8 +15,7 @@ class api_configTable(fr.Resource):
       try:
          jsonStr = fr.request.args.get("load")
          dataDict: dict = json.loads(jsonStr)
-         tblidx = dataDict.pop("tblidx")
-         tblname = TBLS[tblidx]
+         tblname = dataDict.pop("tbl")
          database = dbOps.databaseOps()
          out["rows"] = database.configTablePUT(tblname, dataDict)
          # -- end --
@@ -35,8 +30,7 @@ class api_configTable(fr.Resource):
       try:
          jsonStr = fr.request.args.get("load")
          dataDict: dict = json.loads(jsonStr)
-         tblidx = dataDict.pop("tblidx")
-         tblname = TBLS[tblidx]
+         tblname = dataDict.pop("tbl")
          database = dbOps.databaseOps()
          out["rows"] = database.configTableDELETE(tblname, dataDict)
          # -- end --
