@@ -81,8 +81,12 @@ class databaseOps(object):
       except Exception as e:
          print(e)
 
-   def save_configTablePUT(self, tblname, dataDict: dict) -> int:
+   def configTablePUT(self, tblname, dataDict: dict) -> int:
       qry = confSQL.upsert(tblname, dataDict)
+      return self.dbCore.run_exec(qry)
+
+   def configTableDELETE(self, tblname, dataDict: dict) -> int:
+      qry = confSQL.delete(tblname, dataDict)
       return self.dbCore.run_exec(qry)
 
    """

@@ -20,3 +20,15 @@ class configSQL(object):
                f" where client_dbid = {dbid};"
       # -- return qry --
       return qry
+
+   @staticmethod
+   def delete(tblname, dataDict: dict):
+      qry = ""
+      if tblname == "meters":
+         dbid = int(dataDict["meter_dbid"])
+         qry = f"delete from config.meters where meter_dbid = {dbid};"
+      if tblname == "clients":
+         dbid = int(dataDict["client_dbid"])
+         qry = f"delete from reports.clients where client_dbid = {dbid};"
+      # -- return qry --
+      return qry

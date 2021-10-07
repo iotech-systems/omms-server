@@ -15,21 +15,32 @@ class api_configTable(fr.Resource):
 
    @staticmethod
    def put():
+      out: dict = {}; status = 200
       try:
-         # get request body; should be json string
          jsonStr = fr.request.args.get("load")
-         # json string
-         # jsonStr = codecs.decode(data, "utf-8")
-         # create model
-         # save to database
          dataDict: dict = json.loads(jsonStr)
          tblidx = dataDict.pop("tblidx")
          tblname = TBLS[tblidx]
          database = dbOps.databaseOps()
-         rows = database.save_configTablePUT(tblname, dataDict)
-         # - - - - - - - - - - - - - - - - - -
-         return api_flask.api_flask.jsonResp(f"{{rows:{rows}}}", 200)
+         out["rows"] = database.configTablePUT(tblname, dataDict)
+         # -- end --
       except Exception as e:
          logging.error(e)
       finally:
-         pass
+         return api_flask.api_flask.jsonResp(json.dumps(out), status)
+
+   @staticmethod
+   def delete():
+      out: dict = {}; status = 200
+      try:
+         jsonStr = fr.request.args.get("load")
+         dataDict: dict = json.loads(jsonStr)
+         tblidx = dataDict.pop("tblidx")
+         tblname = TBLS[tblidx]
+         database = dbOps.databaseOps()
+         out["rows"] = database.configTableDELETE(tblname, dataDict)
+         # -- end --
+      except Exception as e:
+         logging.error(e)
+      finally:
+         return api_flask.api_flask.jsonResp(json.dumps(out), status)
