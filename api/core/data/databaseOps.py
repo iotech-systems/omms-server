@@ -168,7 +168,9 @@ class databaseOps(object):
       return self.dbCore.run_qry_fetch_scalar(qry)
 
    def get_cltCircuits(self):
-      sel = "select * from reports.client_circuits cc order by cc.client_tag asc"
+      sel = "select c.client_name, cc.* from reports.client_circuits cc" \
+         " join reports.clients c on cc.client_tag = c.client_tag " \
+         " order by cc.client_tag asc"
       qry = self.__json_rows__(sel)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
