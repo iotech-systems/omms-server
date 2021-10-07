@@ -5,10 +5,12 @@ class configSQL(object):
    @staticmethod
    def upsert(tblname, dataDict: dict) -> str:
       qry = ""
+      # -- meters --
       if tblname == "meters":
          dbid = int(dataDict["meter_dbid"])
          ctag = dataDict["circuit_tag"]
          qry = f"update config.meters set circuit_tag = '{ctag}' where meter_dbid = {dbid};"
+      # -- clients --
       if tblname == "clients":
          dbid = dataDict["client_dbid"]
          tag = dataDict["client_tag"]
@@ -18,6 +20,7 @@ class configSQL(object):
          else:
             qry = f"update reports.client set client_tag = '{tag}', client_name = '{name}' " \
                f" where client_dbid = {dbid};"
+      # -- circuits --
       if tblname == "circuits":
          dbid = dataDict["circuit_dbid"]
          tag = dataDict["circuit_tag"]
