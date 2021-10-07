@@ -89,6 +89,21 @@ class databaseOps(object):
       qry = confSQL.delete(tblname, dataDict)
       return self.dbCore.run_exec(qry)
 
+   def datalist(self, dl):
+      qry = ""
+      if dl == "elcrm-tags":
+         qry = "select o.entity_dbid, o.entag, o.entity_desc" \
+            " from config.org o where o.entity_type = 'electricalroom'"
+      elif dl == "client-tags":
+         qry = "select * from reports.clients"
+      elif dl == "circuit-tags":
+         qry = "select circuit_dbid, circuit_tag, entag from config.circuits"
+      elif dl == "building-tags":
+         qry = "select o.entity_dbid, o.entag, o.entity_desc" \
+            " from config.org o where o.entity_type = 'building'"
+      # -- return jobj --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    """
       getters
    """
