@@ -16,8 +16,7 @@ class api_tableInfo(fr.Resource):
    def get():
       try:
          jsonStr = ""
-         IDX: str = str(flask.request.args.get("tblidx"))
-         tableName = TBLS[IDX]
+         tableName: str = str(flask.request.args.get("tbl"))
          db: dbOps.databaseOps = dbOps.databaseOps()
          resObj = db.get_tableInfo(tableName)
          if resObj is not None:
