@@ -40,7 +40,7 @@ class configSQL(object):
          entag: str = dataDict["entag"]
          status: int = int(dataDict["status"])
          qry = f"insert into reports.client_circuits" \
-            f" values('{clt_tag}', '{entag}', '{cir_tag}', {status});"
+            f" values('{clt_tag}', '{entag}', '{cir_tag}', {status}, now());"
       # -- return qry --
       return qry
 
