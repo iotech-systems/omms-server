@@ -101,7 +101,8 @@ class databaseOps(object):
             " from reports.clients c"
       # -- circuit tags --
       elif dl == "circuit-tags":
-         qry = "select circuit_dbid xdbid, circuit_tag xtag, entag from config.circuits"
+         qry = "select circuit_dbid xdbid, circuit_tag xtag, entag xdescr" \
+            " from config.circuits"
       # -- building tags --
       elif dl == "building-tags":
          qry = "select o.entity_dbid xdbid, o.entag xtag, o.entity_desc xdescr" \
