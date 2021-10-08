@@ -56,5 +56,14 @@ class configSQL(object):
       if tblname == "circuits":
          dbid = int(dataDict["circuit_dbid"])
          qry = f"delete from config.circuits where circuit_dbid = {dbid};"
+      if tblname == "circuits":
+         dbid = int(dataDict["circuit_dbid"])
+         qry = f"delete from config.circuits where circuit_dbid = {dbid};"
+      if tblname == "client-circuits":
+         cir_tag = dataDict["circuit_tag"]
+         clt_tag = dataDict["client_tag"]
+         entag = dataDict["entag"]
+         qry = f"delete from reports.client_circuits where circuit_tag = '{cir_tag}' and" \
+            f" client_tag = '{clt_tag}' and entag = '{entag}';"
       # -- return qry --
       return qry
