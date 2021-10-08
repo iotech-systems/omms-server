@@ -91,15 +91,20 @@ class databaseOps(object):
 
    def datalist(self, dl):
       qry = ""
+      # -- electrical room tags --
       if dl == "elcrm-tags":
-         qry = "select o.entity_dbid, o.entag, o.entity_desc" \
+         qry = "select o.entity_dbid xdbid, o.entag xtag, o.entity_desc xdescr" \
             " from config.org o where o.entity_type = 'electricalroom'"
+      # -- client tags --
       elif dl == "client-tags":
-         qry = "select * from reports.clients"
+         qry = "select c.client_dbid xdbid, c.client_tag xtag, c.client_name xdescr" \
+            " from reports.clients c"
+      # -- circuit tags --
       elif dl == "circuit-tags":
-         qry = "select circuit_dbid, circuit_tag, entag from config.circuits"
+         qry = "select circuit_dbid xdbid, circuit_tag xtag, entag from config.circuits"
+      # -- building tags --
       elif dl == "building-tags":
-         qry = "select o.entity_dbid, o.entag, o.entity_desc" \
+         qry = "select o.entity_dbid xdbid, o.entag xtag, o.entity_desc xdescr" \
             " from config.org o where o.entity_type = 'building'"
       else:
          pass
