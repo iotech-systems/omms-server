@@ -13,6 +13,7 @@ from core.data.configSQL import configSQL as confSQL
 
 logfile = "logs/dbops.log"
 level = logging.WARNING
+HISTOGRAM_POINTS = 60
 
 
 class databaseOps(object):
@@ -200,14 +201,15 @@ class databaseOps(object):
 
    def get_histogramData(self, meterDBID: int):
       qry = f"select * from streams.\"__basic_pwr_stats\" t" \
-         f" where t.fk_meter_dbid = {meterDBID} order by t.reading_dts_utc desc limit 60"
+         f" where t.fk_meter_dbid = {meterDBID} order by t.reading_dts_utc" \
+         f" desc limit {HISTOGRAM_POINTS}"
       qry = self.__json_rows__(qry)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
    def get_tableInfo(self, tableName):
       qry = f"select column_name colname, data_type dtype, character_maximum_length maxlen," \
          f" column_default coldef, is_nullable nullok, ordinal_position" \
-         f" from INFORMATION_SCHEMA.COLUMNS" \
+         f" from information_schema.columns" \
          f" where table_name = '{tableName}'"
       # -- update query --
       qry = self.__json_rows__(qry)
