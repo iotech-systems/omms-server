@@ -60,8 +60,10 @@ class configSQL(object):
          dbid = int(dataDict["circuit_dbid"])
          qry = f"delete from config.circuits where circuit_dbid = {dbid};"
       if tblname == "client_circuits":
-         cir_tag = dataDict["circuit_tag"]
+         cir_tag: str = dataDict["circuit_tag"]
+         cir_tag = cir_tag.replace("_$_", "/")
          clt_tag = dataDict["client_tag"]
+         clt_tag = clt_tag.replace("_$_", "/")
          entag = dataDict["entag"]
          qry = f"delete from reports.client_circuits where circuit_tag = '{cir_tag}' and" \
             f" client_tag = '{clt_tag}' and entag = '{entag}';"
