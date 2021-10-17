@@ -41,6 +41,19 @@ class configSQL(object):
          status: int = int(dataDict["status"])
          qry = f"insert into reports.client_circuits" \
             f" values('{clt_tag}', '{entag}', '{cir_tag}', {status}, now());"
+      # -- spaces --
+      if tblname == "spaces":
+         floor: int = 0
+         bld_tag: str = dataDict["building_entag"]
+         spc_tag: str = dataDict["space_tag"]
+         tmp: str = dataDict["floor"]
+         if "::" in tmp:
+            floor = int(tmp.split("::")[0].strip())
+         else:
+            floor = int(tmp)
+         # -- build qry --
+         qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
+               f" values(default, '{bld_tag}', '{spc_tag}', {floor});"
       # -- return qry --
       return qry
 
