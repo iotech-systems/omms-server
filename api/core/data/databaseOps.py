@@ -16,6 +16,9 @@ level = logging.WARNING
 HISTOGRAM_POINTS = 60
 
 
+table_map = {"spaces": "reports.spaces", "clients": "reports.clients"}
+
+
 class databaseOps(object):
 
    def __init__(self):
@@ -171,6 +174,12 @@ class databaseOps(object):
       qry = f"select row_to_json(t) from"\
          f" (select * from streams.{streamTbl} k where fk_meter_dbid = {meterDBID}" \
          f" order by reading_dts_utc desc limit 1) t;"
+      # -- run query -> should be a db json type --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
+   def read_table(self, tblname):
+      tbl = table_map[tblname]
+      qry = self.__json_rows__(f"select * from {tbl}")
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
