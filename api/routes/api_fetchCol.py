@@ -6,7 +6,6 @@ import core.data.databaseOps as dbOps
 from routes.api_flask import api_flask
 
 
-# href:/api/get/fetchcol/clients/client_tag
 class api_fetchTableCol(fr.Resource):
 
    @staticmethod
