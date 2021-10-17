@@ -114,8 +114,13 @@ class databaseOps(object):
       # -- return jobj --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
-   def fetchTableCol(self, tbl, col):
+   def fetchTableCol(self, tbl: str, col: str):
       qry = f"select distinct(t.{col}) tag from {tbl} t"
+      if tbl == "config.org":
+         colName, colType = col.split("|")
+         qry = f"select distinct(t.{colName}) from config.org t" \
+            f" where t.entity_type = '{colType}'"
+      # -- set query --
       qry = self.__json_rows__(qry)
       # -- return jobj --
       return self.dbCore.run_qry_fetch_scalar(qry)
