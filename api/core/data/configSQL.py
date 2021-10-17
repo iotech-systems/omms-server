@@ -53,7 +53,7 @@ class configSQL(object):
             floor = int(tmp)
          # -- build qry --
          qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
-               f" values(default, '{bld_tag}', '{spc_tag}', {floor});"
+               f" values('{bld_tag}', '{spc_tag}', {floor});"
       # -- return qry --
       return qry
 
