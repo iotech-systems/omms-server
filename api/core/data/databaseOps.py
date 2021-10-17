@@ -118,7 +118,7 @@ class databaseOps(object):
       qry = f"select distinct(t.{col}) tag from {tbl} t"
       if tbl == "config.org":
          colName, colType = col.split("|")
-         qry = f"select distinct(t.{colName}) from config.org t" \
+         qry = f"select distinct(t.{colName}) tag from config.org t" \
             f" where t.entity_type = '{colType}'"
       # -- set query --
       qry = self.__json_rows__(qry)
