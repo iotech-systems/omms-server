@@ -10,7 +10,7 @@ from routes import api_alarmReport, api_kWhReport, api_pingPong, \
    api_streamer, api_info, api_dbInfo, api_meters, api_org, \
    api_elecRoomMeters, api_report, api_clients, api_elecRoomActiveMeters, \
    api_histogram, api_spaces, api_tableInfo, api_circuits, api_configTable, \
-   api_cltCircuits, api_datalists
+   api_cltCircuits, api_datalists, api_fetchCol
 
 
 APP_NAME = "openbms-server"
@@ -36,6 +36,7 @@ restApi.add_resource(api_elecRoomMeters.api_getElecRoomMeters, "/elc-room-meters
 restApi.add_resource(api_histogram.api_histogram, "/histogram")
 restApi.add_resource(api_datalists.api_datalists, "/datalists")
 restApi.add_resource(api_elecRoomActiveMeters.api_elecRoomActiveMeters, "/elc-room-meters-active")
+restApi.add_resource(api_fetchCol.api_fetchTableCol, "/fetchcol")
 restApi.add_resource(api_org.api_org, "/org")
 
 # store run.py time

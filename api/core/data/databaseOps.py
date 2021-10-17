@@ -114,6 +114,12 @@ class databaseOps(object):
       # -- return jobj --
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def fetchTableCol(self, tbl, col):
+      qry = f"select distinct(t.{col}) from {tbl} t"
+      qry = self.__json_rows__(qry)
+      # -- return jobj --
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    """
       getters
    """
