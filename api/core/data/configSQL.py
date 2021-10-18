@@ -58,8 +58,8 @@ class configSQL(object):
       if "::default" in dbid:
          qry = f"insert into reports.clients values(default, '{tag}', '{name}');"
       else:
-         qry = f"update reports.client set client_tag = '{tag}', client_name = '{name}' " \
-            f" where client_dbid = {dbid};"
+         qry = f"update reports.clients set (client_tag, client_name)" \
+            f" = ('{tag}', '{name}' where client_dbid = {dbid};"
       # -- return --
       return qry
 
