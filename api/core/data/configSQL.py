@@ -7,7 +7,7 @@ class configSQL(object):
       qry = ""
       # -- meters --
       if tblname == "meters":
-         dbid = int(dataDict["meter_dbid"])
+         dbid = dataDict["meter_dbid"]
          ctag = dataDict["circuit_tag"]
          qry = f"update config.meters set circuit_tag = '{ctag}' where meter_dbid = {dbid};"
       # -- clients --
@@ -15,7 +15,7 @@ class configSQL(object):
          dbid = dataDict["client_dbid"]
          tag = dataDict["client_tag"]
          name = dataDict["client_name"]
-         if "default" in dbid:
+         if "::default" in dbid:
             qry = f"insert into reports.clients values(default, '{tag}', '{name}');"
          else:
             qry = f"update reports.client set client_tag = '{tag}', client_name = '{name}' " \
@@ -27,7 +27,7 @@ class configSQL(object):
          entag = dataDict["entag"]
          amps = dataDict["max_amps"]
          volts = dataDict["voltage"]
-         if "default" in dbid:
+         if "::default" in dbid:
             qry = f"insert into config.circuits " \
                f" values(default, '{tag}', '{entag}', {amps}, {volts});"
          else:
@@ -48,6 +48,7 @@ class configSQL(object):
       # -- spaces --
       if tblname == "spaces":
          floor: int = 0
+         dbid: str = dataDict["space_dbid"]
          bld_tag: str = dataDict["building_entag"]
          spc_tag: str = dataDict["space_tag"]
          tmp: str = dataDict["floor"]
@@ -56,8 +57,12 @@ class configSQL(object):
          else:
             floor = int(tmp)
          # -- build qry --
-         qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
-               f" values('{bld_tag}', '{spc_tag}', {floor});"
+         if "::default" in dbid:
+            qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
+                  f" values('{bld_tag}', '{spc_tag}', {floor});"
+         else:
+            qry = f"update reports.spaces set (building_entag, space_tag, floor) =" \
+               f" ('{bld_tag}', '{spc_tag}', {floor}) where space_dbid = {dbid};"
       # -- return qry --
       return qry
 
@@ -84,5 +89,8 @@ class configSQL(object):
          entag = dataDict["entag"]
          qry = f"delete from reports.client_circuits where circuit_tag = '{cir_tag}' and" \
             f" client_tag = '{clt_tag}' and entag = '{entag}';"
+      if tblname == "spaces":
+         dbid = dataDict["space_dbid"]
+         qry = f"delete from reports.spaces where space_dbid = {dbid};"
       # -- return qry --
       return qry
