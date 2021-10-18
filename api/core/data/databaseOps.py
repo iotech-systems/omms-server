@@ -196,8 +196,8 @@ class databaseOps(object):
       rows = []
       cltMeters: [] = self.__get_client_meters__(cltTag)
       for m in cltMeters:
-         dbid, busAdr, mType, cirTag = m
-         qry = repSQL.meter_kwhrs(int(dbid), sdate, edate)
+         dbid, busAdr, mType, cirTag, spTag = m
+         qry = repSQL.meter_kwhrs(int(dbid), sdate, edate, spTag)
          row = self.dbCore.run_query_fetchone(qry)
          rows.append(row)
       return rows
@@ -379,8 +379,8 @@ class databaseOps(object):
       return f"select row_to_json(t) from ({qry}) t;"
 
    def __get_client_meters__(self, cltTag: str) -> []:
-      qry = f"select m.meter_dbid, m.bus_address, m.meter_type, m.circuit_tag from config.meters m" \
-         f" join reports.client_space_circuits cc on m.circuit_tag = cc.circuit_tag" \
-         f" where cc.client_tag = '{cltTag}';"
+      qry = f"select m.meter_dbid, m.bus_address, m.meter_type, m.circuit_tag, cc.space_tag" \
+         f" from config.meters m join reports.client_space_circuits cc" \
+         f" on m.circuit_tag = cc.circuit_tag where cc.client_tag = '{cltTag}';"
       rows = self.dbCore.run_query(qry)
       return rows

@@ -2,7 +2,7 @@
 class reportsSQL(object):
 
    @staticmethod
-   def meter_kwhrs(meterDBID: int, startDate: str, endDate: str):
+   def meter_kwhrs(meterDBID: int, startDate: str, endDate: str, spaceTag: str):
       # drop table vars;
       return f"""drop table if exists vars;
          create temp table vars (vname varchar(16) not null unique, kwhrs float);
@@ -21,8 +21,7 @@ class reportsSQL(object):
             where vname = 'e_kwhrs';
          -- select row as json --
          select {meterDBID} mdbid, (select m.circuit_tag from config.meters m where m.meter_dbid = {meterDBID}) ctag,
-            '{startDate}' sdts, '{endDate}' edts,
-            (select cc.space_tag from reports.client_space_circuits cc where cc.circuit_tab = ctag) sp_tag,
+            '{startDate}' sdts, '{endDate}' edts, '{spaceTag}',
             ((select kwhrs from vars where vname = 'e_kwhrs') 
                - (select kwhrs from vars where vname = 's_kwhrs')) as kwhrs;"""
 
