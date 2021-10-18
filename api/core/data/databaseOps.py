@@ -53,7 +53,7 @@ class databaseOps(object):
       emit = f"00:{emailInternal}:00"
       sel = f"select case when age(timezone('utc', now()), t.row_ins_dts) > cast('{emit}' as time) then 'yes'" \
          f" else 'no' end as SendNewEmail from streams.alarms t where t.fk_meter_dbid = {r.meterDBID}" \
-         f" and t.\"level\" = '{r.level}' and t.alarm_tag = '{r.alarm_tag}' and status=2" \
+         f" and t.\"level\" = '{r.level}' and t.alarm_tag = '{r.alarm_tag}' and status = 2" \
          f" order by t.row_ins_dts desc limit 1;"
       db: dbCore.dbCore = dbCore.dbCore()
       scalar = db.run_qry_fetch_scalar(sel)
@@ -213,7 +213,7 @@ class databaseOps(object):
       return self.dbCore.run_qry_fetch_scalar(qry)
 
    def get_cltCircuits(self):
-      sel = "select c.client_name, cc.* from reports.client_circuits cc" \
+      sel = "select c.client_name, cc.* from reports.client_space_circuits cc" \
          " join reports.clients c on cc.client_tag = c.client_tag " \
          " order by cc.client_tag asc"
       qry = self.__json_rows__(sel)

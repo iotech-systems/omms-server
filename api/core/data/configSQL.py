@@ -34,13 +34,13 @@ class configSQL(object):
             qry = f"update config.circuits set (circuit_tag, entag, max_amps, voltage)" \
                f" = ('{tag}', '{entag}', {amps}, {volts}) where circuit_dbid = {dbid};"
       # -- client_circuits --
-      if tblname == "client_circuits":
+      if tblname == "client_space_circuits":
          cir_tag: str = dataDict["circuit_tag"]
          clt_tag: str = dataDict["client_tag"]
          entag: str = dataDict["entag"]
-         status: int = int(dataDict["status"])
+         bitflag: int = int(dataDict["bitflag"])
          qry = f"insert into reports.client_circuits" \
-            f" values('{clt_tag}', '{entag}', '{cir_tag}', {status}, now());"
+            f" values('{clt_tag}', '{entag}', '{cir_tag}', {bitflag});"
       # -- spaces --
       if tblname == "spaces":
          floor: int = 0
