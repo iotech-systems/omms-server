@@ -4,67 +4,13 @@ class configSQL(object):
 
    @staticmethod
    def upsert(tblname, dataDict: dict) -> str:
-      qry = ""
-      # -- meters --
-      if tblname == "meters":
-         dbid = dataDict["meter_dbid"]
-         ctag = dataDict["circuit_tag"]
-         qry = f"update config.meters set circuit_tag = '{ctag}' where meter_dbid = {dbid};"
-      # -- clients --
-      if tblname == "clients":
-         dbid = dataDict["client_dbid"]
-         tag = dataDict["client_tag"]
-         name = dataDict["client_name"]
-         if "::default" in dbid:
-            qry = f"insert into reports.clients values(default, '{tag}', '{name}');"
-         else:
-            qry = f"update reports.client set client_tag = '{tag}', client_name = '{name}' " \
-               f" where client_dbid = {dbid};"
-      # -- circuits --
-      if tblname == "circuits":
-         dbid = dataDict["circuit_dbid"]
-         tag = dataDict["circuit_tag"]
-         entag = dataDict["entag"]
-         amps = dataDict["max_amps"]
-         volts = dataDict["voltage"]
-         if "::default" in dbid:
-            qry = f"insert into config.circuits " \
-               f" values(default, '{tag}', '{entag}', {amps}, {volts});"
-         else:
-            qry = f"update config.circuits set (circuit_tag, entag, max_amps, voltage)" \
-               f" = ('{tag}', '{entag}', {amps}, {volts}) where circuit_dbid = {dbid};"
-      # -- client_circuits --
-      if tblname == "client_space_circuits":
-         clt_tag: str = dataDict["client_tag"]
-         entag: str = dataDict["entag"]
-         spa_tag: str = dataDict["space_tag"]
-         cir_tag: str = dataDict["circuit_tag"]
-         tmp = dataDict["bitflag"]
-         if tmp == "":
-            tmp = "0"
-         bitflag: int = int(tmp)
-         qry = f"insert into reports.client_space_circuits" \
-            f" values('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag});"
-      # -- spaces --
-      if tblname == "spaces":
-         floor: int = 0
-         dbid: str = dataDict["space_dbid"]
-         bld_tag: str = dataDict["building_entag"]
-         spc_tag: str = dataDict["space_tag"]
-         tmp: str = dataDict["floor"]
-         if "::" in tmp:
-            floor = int(tmp.split("::")[0].strip())
-         else:
-            floor = int(tmp)
-         # -- build qry --
-         if "::default" in dbid:
-            qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
-                  f" values('{bld_tag}', '{spc_tag}', {floor});"
-         else:
-            qry = f"update reports.spaces set (building_entag, space_tag, floor) =" \
-               f" ('{bld_tag}', '{spc_tag}', {floor}) where space_dbid = {dbid};"
-      # -- return qry --
-      return qry
+      switch = {"meters": configSQL.__meters__(dataDict)
+         , "clients": configSQL.__clients__(dataDict)
+         , "circuits": configSQL.__circuits__(dataDict)
+         , "client_space_circuits": configSQL.__client_space_circuits__(dataDict)
+         , "spaces": configSQL.__spaces__(dataDict)}
+      # -- return query --
+      return switch[tblname]
 
    @staticmethod
    def delete(tblname, dataDict: dict):
@@ -83,9 +29,7 @@ class configSQL(object):
          qry = f"delete from config.circuits where circuit_dbid = {dbid};"
       if tblname == "client_circuits":
          cir_tag: str = dataDict["circuit_tag"]
-         cir_tag = cir_tag.replace("_$_", "/")
          clt_tag = dataDict["client_tag"]
-         clt_tag = clt_tag.replace("_$_", "/")
          entag = dataDict["entag"]
          qry = f"delete from reports.client_circuits where circuit_tag = '{cir_tag}' and" \
             f" client_tag = '{clt_tag}' and entag = '{entag}';"
@@ -94,3 +38,89 @@ class configSQL(object):
          qry = f"delete from reports.spaces where space_dbid = {dbid};"
       # -- return qry --
       return qry
+
+   @staticmethod
+   def __meters__(dataDict: []):
+      dbid = dataDict["meter_dbid"]
+      ctag = dataDict["circuit_tag"]
+      return f"update config.meters set circuit_tag = '{ctag}' where meter_dbid = {dbid};"
+
+   @staticmethod
+   def __clients__(dataDict: []):
+      dbid = dataDict["client_dbid"]
+      tag = dataDict["client_tag"]
+      name = dataDict["client_name"]
+      if "::default" in dbid:
+         qry = f"insert into reports.clients values(default, '{tag}', '{name}');"
+      else:
+         qry = f"update reports.client set client_tag = '{tag}', client_name = '{name}' " \
+            f" where client_dbid = {dbid};"
+      # -- return --
+      return qry
+
+   @staticmethod
+   def __circuits__(dataDict: []):
+      dbid = dataDict["circuit_dbid"]
+      tag = dataDict["circuit_tag"]
+      entag = dataDict["entag"]
+      amps = dataDict["max_amps"]
+      volts = dataDict["voltage"]
+      if "::default" in dbid:
+         qry = f"insert into config.circuits " \
+               f" values(default, '{tag}', '{entag}', {amps}, {volts});"
+      else:
+         qry = f"update config.circuits set (circuit_tag, entag, max_amps, voltage)" \
+               f" = ('{tag}', '{entag}', {amps}, {volts}) where circuit_dbid = {dbid};"
+      # -- return --
+      return qry
+
+   @staticmethod
+   def __client_space_circuits__(dataDict: []):
+      NotSet = 999
+      dbid: str = dataDict["csc_dbid"]
+      clt_tag: str = dataDict["client_tag"]
+      entag: str = dataDict["entag"]
+      spa_tag: str = dataDict["space_tag"]
+      cir_tag: str = dataDict["circuit_tag"]
+      tmp = dataDict["bitflag"]
+      if tmp == "":
+         tmp = NotSet
+      bitflag: int = int(tmp)
+      if "::default" in dbid:
+         qry = f"insert into reports.client_space_circuits" \
+            f" values('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag});"
+      else:
+         qry = f"update reports.client_space_circuits" \
+            f" set ('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag})" \
+            f" = ('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag})" \
+            f" where csc_dbid = {dbid};"
+      # -- return --
+      return qry
+
+   @staticmethod
+   def __spaces__(dataDict: []):
+      dbid: str = dataDict["space_dbid"]
+      bld_tag: str = dataDict["building_entag"]
+      spc_tag: str = dataDict["space_tag"]
+      tmp: str = dataDict["floor"]
+      if "::" in tmp:
+         floor = int(tmp.split("::")[0].strip())
+      else:
+         floor = int(tmp)
+      # -- build qry --
+      if "::default" in dbid:
+         qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
+               f" values('{bld_tag}', '{spc_tag}', {floor});"
+      else:
+         qry = f"update reports.spaces set (building_entag, space_tag, floor) =" \
+               f" ('{bld_tag}', '{spc_tag}', {floor}) where space_dbid = {dbid};"
+      # -- return --
+      return qry
+
+
+"""
+   dbid = dataDict["meter_dbid"]
+         ctag = dataDict["circuit_tag"]
+         qry = f"update config.meters set circuit_tag = '{ctag}' where meter_dbid = {dbid};"
+         
+"""
