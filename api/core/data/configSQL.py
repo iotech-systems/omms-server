@@ -59,7 +59,7 @@ class configSQL(object):
          qry = f"insert into reports.clients values(default, '{tag}', '{name}');"
       else:
          qry = f"update reports.clients set (client_tag, client_name)" \
-            f" = ('{tag}', '{name}' where client_dbid = {dbid};"
+            f" = ('{tag}', '{name}') where client_dbid = {dbid};"
       # -- return --
       return qry
 
