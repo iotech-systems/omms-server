@@ -3,14 +3,19 @@
 class configSQL(object):
 
    @staticmethod
-   def upsert(tblname, dataDict: dict) -> str:
-      switch = {"meters": configSQL.__meters__(dataDict)
-         , "clients": configSQL.__clients__(dataDict)
-         , "circuits": configSQL.__circuits__(dataDict)
-         , "client_space_circuits": configSQL.__client_space_circuits__(dataDict)
-         , "spaces": configSQL.__spaces__(dataDict)}
-      # -- return query --
-      return switch[tblname]
+   def upsert(tblname, dataDict: dict) -> [str, None]:
+      if tblname == "meters":
+         return configSQL.__meters__(dataDict)
+      elif tblname == "clients":
+         return configSQL.__clients__(dataDict)
+      elif tblname == "circuits":
+         return configSQL.__circuits__(dataDict)
+      elif tblname == "client_space_circuits":
+         return configSQL.__client_space_circuits__(dataDict)
+      elif tblname == "spaces":
+         return configSQL.__spaces__(dataDict)
+      else:
+         return None
 
    @staticmethod
    def delete(tblname, dataDict: dict):
