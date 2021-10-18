@@ -35,12 +35,16 @@ class configSQL(object):
                f" = ('{tag}', '{entag}', {amps}, {volts}) where circuit_dbid = {dbid};"
       # -- client_circuits --
       if tblname == "client_space_circuits":
-         cir_tag: str = dataDict["circuit_tag"]
          clt_tag: str = dataDict["client_tag"]
          entag: str = dataDict["entag"]
-         bitflag: int = int(dataDict["bitflag"])
-         qry = f"insert into reports.client_circuits" \
-            f" values('{clt_tag}', '{entag}', '{cir_tag}', {bitflag});"
+         spa_tag: str = dataDict["space_tag"]
+         cir_tag: str = dataDict["circuit_tag"]
+         tmp = dataDict["bitflag"]
+         if tmp == "":
+            tmp = "0"
+         bitflag: int = int(tmp)
+         qry = f"insert into reports.client_space_circuits" \
+            f" values('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag});"
       # -- spaces --
       if tblname == "spaces":
          floor: int = 0
