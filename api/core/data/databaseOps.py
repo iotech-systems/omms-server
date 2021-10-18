@@ -380,7 +380,7 @@ class databaseOps(object):
 
    def __get_client_meters__(self, cltTag: str) -> []:
       qry = f"select m.meter_dbid, m.bus_address, m.meter_type, m.circuit_tag from config.meters m" \
-         f" join reports.client_circuits cc on m.circuit_tag = cc.circuit_tag" \
+         f" join reports.client_space_circuits cc on m.circuit_tag = cc.circuit_tag" \
          f" where cc.client_tag = '{cltTag}';"
       rows = self.dbCore.run_query(qry)
       return rows
