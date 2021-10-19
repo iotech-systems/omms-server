@@ -96,7 +96,7 @@ class configSQL(object):
             f" values('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag});"
       else:
          qry = f"update reports.client_space_circuits" \
-            f" set ('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag})" \
+            f" set (client_tag, entag, space_tag, circuit_tag, bitflag)" \
             f" = ('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag})" \
             f" where csc_dbid = {dbid};"
       # -- return --
