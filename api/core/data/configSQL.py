@@ -45,6 +45,13 @@ class configSQL(object):
       return qry
 
    @staticmethod
+   def activeElectricMeters(elcRoomTag: str):
+      return f"select distinct(bps.fk_meter_dbid) from streams.\"__basic_pwr_stats\" bps " \
+         f" join streams.\"__kwhrs\" k on bps.fk_meter_dbid = k.fk_meter_dbid " \
+         f" join config.meters m on m.meter_dbid = bps.fk_meter_dbid " \
+         f" where m.elcrm_entag = '{elcRoomTag}'"
+
+   @staticmethod
    def __meters__(dataDict: []):
       dbid = dataDict["meter_dbid"]
       ctag = dataDict["circuit_tag"]

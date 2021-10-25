@@ -162,10 +162,7 @@ class databaseOps(object):
       return self.dbCore.run_qry_fetch_scalar(qry)
 
    def get_elecRoomActiveMeters(self, tag: str) -> [object, False]:
-      qry = f"select distinct(bps.fk_meter_dbid) from streams.\"__basic_pwr_stats\" bps " \
-         f" join streams.\"__kwhrs\" k on bps.fk_meter_dbid = k.fk_meter_dbid " \
-         f" join config.meters m on m.meter_dbid = bps.fk_meter_dbid " \
-         f" where m.elcrm_entag = '{tag}'"
+      qry = confSQL.activeElectricMeters(tag)
       qry = self.__json_rows__(qry)
       # -- run query -> should be a db json type --
       return self.dbCore.run_qry_fetch_scalar(qry)
