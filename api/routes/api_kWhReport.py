@@ -1,7 +1,7 @@
 
 import codecs
 import flask_restful as fr
-from sbmslib.shared.models import kWhReport
+from openbmslib.shared.models import kWhReport
 import core.data.databaseOps as dbOps
 
 

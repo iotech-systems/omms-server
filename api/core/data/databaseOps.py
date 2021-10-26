@@ -2,10 +2,10 @@
 import logging
 from typing import List
 import core.data.dbCore as dbCore
-from sbmslib.shared.app_error_codes import appErrorCodes
-from sbmslib.shared.core.registerNames import registerNames as rn
-from sbmslib.shared.utils.sysutils import sysutils
-from sbmslib.shared.models import alarmReport, kWhReport,\
+from openbmslib.shared.app_error_codes import appErrorCodes
+from openbmslib.shared.core.registerNames import registerNames as rn
+from openbmslib.shared.utils.sysutils import sysutils
+from openbmslib.shared.models import alarmReport, kWhReport,\
    jsonPackageHead, kWhReading
 from core.data.reportsSQL import reportsSQL as repSQL
 from core.data.configSQL import configSQL as confSQL

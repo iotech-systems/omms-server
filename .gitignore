@@ -2,8 +2,9 @@
 #PyCharm
 .idea/
 
-# exclude sbmslib folder
+# exclude sbmslib, openbmslib folders
 *.sbmslib
+*.openbmslib
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

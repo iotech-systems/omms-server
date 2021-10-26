@@ -1,7 +1,7 @@
 
 from datetime import datetime
 import flask_restful as fr
-from sbmslib.shared.misc import dtsFormats
+from openbmslib.shared.misc import dtsFormats
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
