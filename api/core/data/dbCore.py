@@ -1,5 +1,4 @@
 
-import psycopg2
 import core.data.dbConfig as dbConfig
 
 
@@ -8,8 +7,23 @@ class dbCore(object):
    def __init__(self):
       self.conn = dbConfig.dbConfig.getConnection()
 
-   def run_query(self, query: str):
-      pass
+   def run_query(self, query: str) -> []:
+      try:
+         with self.conn.cursor() as cur:
+            cur.execute(query)
+            rows = cur.fetchall()
+         return rows
+      except Exception as e:
+         print(e)
+
+   def run_query_fetchone(self, query: str) -> []:
+      try:
+         with self.conn.cursor() as cur:
+            cur.execute(query)
+            row = cur.fetchone()
+         return row
+      except Exception as e:
+         print(e)
 
    def run_insert(self, ins: str):
       try:
@@ -41,9 +55,21 @@ class dbCore(object):
                or None when no more data is available: """
             row = cur.fetchone()
          # - - - -
-         if len(row) > 0:
+         if (row is None) or (len(row) == 0):
+            return None
+         elif len(row) == 1:
             return row[0]
          else:
-            return None
+            raise Exception("TooManyRowsFound!")
+      except Exception as e:
+         print(e)
+
+   def run_upsert(self, qry, args: tuple) -> int:
+      try:
+         with self.conn.cursor() as cur:
+            cur.execute(qry, args)
+            rowCnt = cur.rowcount
+            self.conn.commit()
+         return rowCnt
       except Exception as e:
          print(e)

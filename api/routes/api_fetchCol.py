@@ -1,22 +1,23 @@
 
 import json
-import logging
-import flask
+import logging, flask
 import flask_restful as fr
 import core.data.databaseOps as dbOps
+from routes.api_flask import api_flask
 
 
-class api_getMeters(fr.Resource):
+class api_fetchTableCol(fr.Resource):
 
    @staticmethod
    def get():
       try:
          jsonStr = ""
-         cType = "application/json; charset=utf8"
+         tbl: str = str(flask.request.args.get("tbl"))
+         col: str = str(flask.request.args.get("col"))
          db: dbOps.databaseOps = dbOps.databaseOps()
-         resObj = db.get_allMeters()
+         resObj = db.fetchTableCol(tbl, col)
          if resObj is not None:
             jsonStr = json.dumps(resObj)
-         return flask.Response(jsonStr, content_type=cType)
+         return api_flask.jsonResp(jsonStr, 200)
       except Exception as e:
          logging.error(e)
