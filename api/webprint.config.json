@@ -1,0 +1,5 @@
+{
+  "enable": true,
+  "printUrl": "http://lab.iotech.systems:9090/webprint",
+  "on404": "file:///var/log/iotech/webprint.log"
+}

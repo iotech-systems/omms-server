@@ -1,4 +1,4 @@
 # user ofer ssh to do local runs
-host=localhost port=8787 dbname=sbms user=sbms_rest_api password=sbms_rest_api_pwd
+#host=localhost port=8787 dbname=sbms user=sbms_rest_api password=sbms_rest_api_pwd
 #host=10.0.40.208 dbname=sbms_db user=sbms_admin password=abcd1234@@
-#host=localhost dbname=sbms user=sbms_rest_api password=sbms_rest_api_pwd
+host=localhost dbname=sbms user=sbms_rest_api password=sbms_rest_api_pwd

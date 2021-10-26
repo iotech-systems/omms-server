@@ -4,6 +4,7 @@ import codecs, flask, json
 import flask_restful as fr
 from openbmslib.shared.utils.jsonx import jsonx
 from openbmslib.shared.api_response import api_response
+from openbmslib.shared.webprint import webprint
 import core.data.databaseOps as dbOps
 import routes.api_flask as api_flask
 
@@ -18,6 +19,8 @@ class api_streamer(fr.Resource):
          data = fr.request.data
          # json string
          jsonStr = codecs.decode(data, "UTF-8")
+         wp: webprint = webprint()
+         wp.print(jsonStr)
          # create model
          jObj = jsonx.getJsonObj(jsonStr)
          # save to database
@@ -53,3 +56,11 @@ class api_streamer(fr.Resource):
          jsonStr = f'{"Error": "{e}"}'
       finally:
          return api_flask.api_flask.jsonResp(jsonStr, status)
+
+
+# -- test --
+if __name__ == "__main__":
+   # api_streamer.put()
+   wp: webprint = webprint()
+   wp.init()
+   wp.print("test")
