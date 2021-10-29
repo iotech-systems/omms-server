@@ -114,18 +114,25 @@ class configSQL(object):
       dbid: str = dataDict["space_dbid"]
       bld_tag: str = dataDict["building_entag"]
       spc_tag: str = dataDict["space_tag"]
-      tmp: str = dataDict["floor"]
+      # -- space area --
+      tmp: str = dataDict["area_m2"]
+      if tmp in [None, ""]:
+         area_m2 = None
+      else:
+         area_m2 = float(dataDict["area_m2"])
+      # -- floor --
+      tmp = dataDict["floor"]
       if "::" in tmp:
          floor = int(tmp.split("::")[0].strip())
       else:
          floor = int(tmp)
       # -- build qry --
       if "::default" in dbid:
-         qry = f"insert into reports.spaces (building_entag, space_tag, floor)" \
-               f" values('{bld_tag}', '{spc_tag}', {floor});"
+         qry = f"insert into reports.spaces (building_entag, space_tag, area_m2, floor)" \
+               f" values('{bld_tag}', '{spc_tag}', {area_m2}, {floor});"
       else:
-         qry = f"update reports.spaces set (building_entag, space_tag, floor) =" \
-               f" ('{bld_tag}', '{spc_tag}', {floor}) where space_dbid = {dbid};"
+         qry = f"update reports.spaces set (building_entag, space_tag, area_m2, floor) =" \
+               f" ('{bld_tag}', '{spc_tag}', {area_m2}, {floor}) where space_dbid = {dbid};"
       # -- return --
       return qry
 
