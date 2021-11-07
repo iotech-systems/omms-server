@@ -1,3 +1,4 @@
-# OpenBMS
-## obms-core
-sbms backend talking to database &amp; etc
+# open meter management system
+## server + api
+
+omms backend talking to database &amp; etc
