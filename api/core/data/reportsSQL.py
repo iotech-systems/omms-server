@@ -24,7 +24,7 @@ class reportsSQL(object):
             where m.meter_dbid = {meterDBID}) ctag,
                '{startDate}' sdts, '{endDate}' edts, '{spaceTag}',
                round(((select kwhrs from vars where vname = 'e_kwhrs') 
-                  - (select kwhrs from vars where vname = 's_kwhrs'))::numeric, 2) as kwhrs;"""
+                  - (select kwhrs from vars where vname = 's_kwhrs'))::numeric, 2)::float as kwhrs;"""
 
    @staticmethod
    def client_kwhrs(sDate: str, eDate: str, cltDBID: int):
