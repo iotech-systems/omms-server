@@ -13,7 +13,7 @@ from routes import api_alarmReport, api_kWhReport, api_pingPong, \
    api_cltCircuits, api_datalists, api_fetchCol, api_table
 
 
-APP_NAME = "openbms-server"
+APP_NAME = "omms-restapi"
 app = f.Flask(APP_NAME)
 restApi = fr.Api(app)
 

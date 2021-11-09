@@ -7,7 +7,7 @@ CONN_STRING_FILE = "config/dbconn.string"
 class dbConfig(object):
 
    @staticmethod
-   def getConnection():
+   def getConnection() -> [object, None]:
       try:
          # ignore all lines with #
          with open(CONN_STRING_FILE, "r") as file:
@@ -16,9 +16,11 @@ class dbConfig(object):
          if lns[0] in (None, ""):
             raise Exception("BadDatabaseConnectionString")
          # - - - -
-         conn = psycopg2.connect(lns[0])
+         connStr = lns[0].strip()
+         conn = psycopg2.connect(connStr)
          if conn is None:
-            raise Exception(f"UnableToConnect: {lns[0]}")
+            raise Exception(f"UnableToConnect: {connStr}")
          return conn
       except Exception as e:
          print(e)
+         return None

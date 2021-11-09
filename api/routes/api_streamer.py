@@ -2,9 +2,9 @@
 import logging
 import codecs, flask, json
 import flask_restful as fr
-from openbmslib.shared.utils.jsonx import jsonx
-from openbmslib.shared.api_response import api_response
-from openbmslib.shared.webprint import webprint
+from ommslib.shared.utils.jsonx import jsonx
+from ommslib.shared.api_response import api_response
+from ommslib.shared.webprint import webprint
 import core.data.databaseOps as dbOps
 import routes.api_flask as api_flask
 

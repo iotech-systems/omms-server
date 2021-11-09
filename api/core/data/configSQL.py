@@ -100,6 +100,7 @@ class configSQL(object):
       bitflag: int = int(tmp)
       if "::default" in dbid:
          qry = f"insert into reports.client_space_circuits" \
+            f" (client_tag, entag, space_tag, circuit_tag, bitflag)" \
             f" values('{clt_tag}', '{entag}', '{spa_tag}', '{cir_tag}', {bitflag});"
       else:
          qry = f"update reports.client_space_circuits" \

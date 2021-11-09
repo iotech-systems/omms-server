@@ -1,7 +1,7 @@
 
 import codecs
 import flask_restful as fr
-from openbmslib.shared.models.alarmReport import alarmReport
+from ommslib.shared.models.alarmReport import alarmReport
 import core.data.databaseOps as dbOps
 import core.services.emailBot as embot
 import config.email as emConf

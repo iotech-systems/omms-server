@@ -2,10 +2,10 @@
 import logging
 from typing import List
 import core.data.dbCore as dbCore
-from openbmslib.shared.app_error_codes import appErrorCodes
-from openbmslib.shared.core.registerNames import registerNames as rn
-from openbmslib.shared.utils.sysutils import sysutils
-from openbmslib.shared.models import alarmReport, kWhReport,\
+from ommslib.shared.app_error_codes import appErrorCodes
+from ommslib.shared.core.registerNames import registerNames as rn
+from ommslib.shared.utils.sysutils import sysutils
+from ommslib.shared.models import alarmReport, kWhReport,\
    jsonPackageHead, kWhReading
 from core.data.reportsSQL import reportsSQL as repSQL
 from core.data.configSQL import configSQL as confSQL
@@ -23,8 +23,8 @@ class databaseOps(object):
 
    def __init__(self):
       self.dbCore = dbCore.dbCore()
-      logging.basicConfig(filename=logfile, level=level)
       self.meterNotFound = (appErrorCodes.METER_NOT_FOUND, appErrorCodes.METER_NOT_FOUND.name)
+      logging.basicConfig(filename=logfile, level=level)
 
    def save_kWhRead(self, d: kWhReport.kWhReport):
       # - - - - - - - -
