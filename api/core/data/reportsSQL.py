@@ -20,10 +20,11 @@ class reportsSQL(object):
                and k.fk_meter_dbid in ({meterDBID}) order by k.reading_dts_utc desc limit 1) 
             where vname = 'e_kwhrs';
          -- select row as json --
-         select {meterDBID} mdbid, (select m.circuit_tag from config.meters m where m.meter_dbid = {meterDBID}) ctag,
-            '{startDate}' sdts, '{endDate}' edts, '{spaceTag}',
-            ((select kwhrs from vars where vname = 'e_kwhrs') 
-               - (select kwhrs from vars where vname = 's_kwhrs')) as kwhrs;"""
+         select {meterDBID} mdbid, (select m.circuit_tag from config.meters m 
+            where m.meter_dbid = {meterDBID}) ctag,
+               '{startDate}' sdts, '{endDate}' edts, '{spaceTag}',
+               round(((select kwhrs from vars where vname = 'e_kwhrs') 
+                  - (select kwhrs from vars where vname = 's_kwhrs'))::numeric, 2) as kwhrs;"""
 
    @staticmethod
    def client_kwhrs(sDate: str, eDate: str, cltDBID: int):
