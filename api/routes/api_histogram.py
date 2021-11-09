@@ -14,9 +14,12 @@ class api_histogram(fr.Resource):
       status = 400
       jsonStr = "{\"Error\": \"Unexpected\"}"
       try:
+         hrs: int = 2
          meterDBID = flask.request.args.get("mid")
+         if "hrs" in flask.request.args:
+            hrs = int(flask.request.args.get("hrs"))
          db: dbOps.databaseOps = dbOps.databaseOps()
-         rows = db.get_histogramData(int(meterDBID))
+         rows = db.get_histogramData(int(meterDBID), hrs)
          md5 = hashlib.md5(codecs.encode(json.dumps(rows), "utf-8"))
          data = {"streamTbl": "__histogram", "md5": md5.hexdigest(), "rows": rows}
          jsonStr = json.dumps(data)

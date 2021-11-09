@@ -13,7 +13,7 @@ from core.data.configSQL import configSQL as confSQL
 
 logfile = "logs/dbops.log"
 level = logging.WARNING
-HISTOGRAM_POINTS = 60
+HISTOGRAM_POINTS_HR = 30
 
 
 table_map = {"spaces": "reports.spaces", "clients": "reports.clients"}
@@ -216,7 +216,8 @@ class databaseOps(object):
       qry = self.__json_rows__(sel)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
-   def get_histogramData(self, meterDBID: int):
+   def get_histogramData(self, meterDBID: int, hrs: int = 2):
+      HISTOGRAM_POINTS = (HISTOGRAM_POINTS_HR * hrs)
       qry = f"select * from streams.\"__basic_pwr_stats\" t" \
          f" where t.fk_meter_dbid = {meterDBID} order by t.reading_dts_utc" \
          f" desc limit {HISTOGRAM_POINTS}"
