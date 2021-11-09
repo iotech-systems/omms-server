@@ -14,6 +14,7 @@ from core.data.configSQL import configSQL as confSQL
 logfile = "logs/dbops.log"
 level = logging.WARNING
 HISTOGRAM_POINTS_HR = 30
+LIVE_TBL_ROW_HRS_TTL = 24
 
 
 table_map = {"spaces": "reports.spaces", "clients": "reports.clients"}
@@ -270,7 +271,7 @@ class databaseOps(object):
          # - - - - - - - -
          # db: dbCore.dbCore = dbCore.dbCore()
          val = db.run_insert(ins)
-         self.__clear_live_tbl(tblName, ttlHrs)
+         self.__clear_live_tbl(tblName)
       # - - - - - - - -
       error = appErrorCodes.BAD_DB_INSERT
       if rowcount == 1:
@@ -336,7 +337,7 @@ class databaseOps(object):
             f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
          # - - best try - -
          db.run_insert(ins)
-         self.__clear_live_tbl(tblName, ttlHrs)
+         self.__clear_live_tbl(tblName)
       # - - - - - - - - -
       error = appErrorCodes.BAD_DB_INSERT
       if rowcount == 1:
@@ -356,7 +357,7 @@ class databaseOps(object):
       # return dbid of the meter
       return dbid
 
-   def __clear_live_tbl(self, tblName: str, ageHrs: int):
+   def __clear_live_tbl(self, tblName: str):
       try:
          # - - try table name - -
          if not tblName.startswith("__"):
@@ -364,7 +365,7 @@ class databaseOps(object):
          # - - - - - -
          qry = f"delete from streams.{tblName} where" \
             f" (date_part('hour', timezone('utc', now())) - " \
-            f" date_part('hour', reading_dts_utc)) > {ageHrs};"
+            f" date_part('hour', reading_dts_utc)) > {LIVE_TBL_ROW_HRS_TTL};"
          self.dbCore.run_exec(qry)
       except Exception as e:
          print(e)
