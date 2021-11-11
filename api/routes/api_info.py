@@ -16,7 +16,14 @@ class api_info(fr.Resource):
    def get():
       try:
          dts: str = datetime.utcnow().strftime(dtsFormats.stdUtc)
-         out = {"app": app, "ver": ver, "dts": dts}
-         return api_flask.jsonResp(json.dumps(out), 200)
+         out: dict = {"app": app, "ver": ver, "dts": dts}
+         jsonBuff = json.dumps(out)
+         return api_flask.jsonResp(jsonBuff, 200)
       except Exception as e:
          return {f"exception: {str(e)}"}
+
+
+# -- test --
+if __name__ == "__main__":
+   buff = api_info.get()
+   print(buff)
