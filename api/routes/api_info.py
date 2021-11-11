@@ -18,7 +18,7 @@ class api_info(fr.Resource):
       try:
          dts: str = datetime.utcnow().strftime(dtsFormats.stdUtc)
          jsonBuff: str = f"{{\"app\": \"{app}\", \"ver\": \"{ver}\", \"dts\": \"{dts}\"}}"
-         return api_flask.jsonResp(jsonBuff, 200)
+         return jsonBuff
       except Exception as e:
          return {f"exception: {str(e)}"}
 
