@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import datetime
+import sys
+
 import flask as f
 import setproctitle
 import flask_restful as fr
@@ -47,6 +49,13 @@ store.inProcStore.addKeyVal("AppStart", datetime.time())
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if __name__ == "__main__":
    # dump flask info
+   debugFlag = False
+   if len(sys.argv) == 2:
+      kv: str = sys.argv[1].lower()
+      if kv.startswith("debug="):
+         debugFlag = (kv.replace("debug=", "") == "true")
+   # -- start ---
    print(f"\n  * flask version: {f.__version__}\n")
+   print(f"debugFlag: {debugFlag}")
    setproctitle.setproctitle("omms-api")
-   app.run(host="0.0.0.0", port=8082, debug=False)
+   app.run(host="0.0.0.0", port=8082, debug=debugFlag)
