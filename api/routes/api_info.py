@@ -14,7 +14,7 @@ class api_info(fr.Resource):
    @staticmethod
    def get():
       try:
-         dts = datetime.utcnow().strftime(dtsFormats.std)
+         dts = datetime.utcnow().strftime(dtsFormats.stdUtc)
          out = {"app": app, "ver": ver, "dts": dts}
          return api_flask.jsonResp(json.dumps(out), 200)
       except Exception as e:
