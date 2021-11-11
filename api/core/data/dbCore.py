@@ -37,7 +37,7 @@ class dbCore(object):
       except Exception as e:
          print(e)
 
-   def run_exec(self, qry: str):
+   def run_exec(self, qry: str) -> int:
       try:
          with self.conn.cursor() as cur:
             cur.execute(qry)

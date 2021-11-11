@@ -344,6 +344,10 @@ class databaseOps(object):
          error = appErrorCodes.OK
       return error, None
 
+   """
+      can be used to update last meter checked dts this can be used
+      to see if the meter is active!
+   """
    def __get_meterDBID__(self, jph: jsonPackageHead.jsonPackageHead) -> int:
       qry = f"select m.meter_dbid from config.meters m where m.edge_name = '{jph.edgeName}'" \
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
@@ -354,12 +358,23 @@ class databaseOps(object):
          dbid = 0
       else:
          dbid = int(dbid)
+         self.__touch_meter__(dbid, "OK")
       # return dbid of the meter
       return dbid
 
+   def __touch_meter__(self, dbid: int, freetxt: str = "n/s") -> int:
+      try:
+         qry = f"insert into \"diagnostics\".active_meters" \
+            f" values({dbid}, '{freetxt}', now())" \
+            f" on conflict on constraint uq_fk_meter_dbid" \
+            f" do update set freetext = '{freetxt}', dts_last_touch = now();"
+         return self.dbCore.run_exec(qry)
+      except Exception as e:
+         return 0
+
    def __clear_live_tbl(self, tblName: str):
       try:
-         # - - try table name - -
+         # - - test table name - -
          if not tblName.startswith("__"):
             raise Exception(f"BadTableName: {tblName}")
          # - - - - - -
