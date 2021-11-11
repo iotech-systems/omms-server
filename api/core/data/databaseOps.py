@@ -353,7 +353,6 @@ class databaseOps(object):
             f" and m.bus_type = '{jph.busType}' and bus_address = {jph.busAddress};"
       dbid = self.dbCore.run_qry_fetch_scalar(qry)
       if dbid is None:
-         # logging.warning(f"dbid not found! qry: {qry};")
          # reset dbid to zero as not found!
          dbid = 0
       else:

@@ -46,10 +46,13 @@ class configSQL(object):
 
    @staticmethod
    def activeElectricMeters(elcRoomTag: str):
-      return f"select distinct(bps.fk_meter_dbid) from streams.\"__basic_pwr_stats\" bps " \
-         f" join streams.\"__kwhrs\" k on bps.fk_meter_dbid = k.fk_meter_dbid " \
-         f" join config.meters m on m.meter_dbid = bps.fk_meter_dbid " \
-         f" where m.elcrm_entag = '{elcRoomTag}'"
+      # return f"select distinct(bps.fk_meter_dbid) from streams.\"__basic_pwr_stats\" bps " \
+      #    f" join streams.\"__kwhrs\" k on bps.fk_meter_dbid = k.fk_meter_dbid " \
+      #    f" join config.meters m on m.meter_dbid = bps.fk_meter_dbid " \
+      #    f" where m.elcrm_entag = '{elcRoomTag}'"
+      return f"select distinct(am.fk_meter_dbid) from \"diagnostics\".active_meters am"\
+         f" join config.meters m  on m.meter_dbid = am.fk_meter_dbid"\
+         f" where m.elcrm_entag  = '{elcRoomTag}';"
 
    @staticmethod
    def __meters__(dataDict: []):
