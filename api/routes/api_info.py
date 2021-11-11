@@ -20,7 +20,7 @@ class api_info(fr.Resource):
          jsonBuff: str = f"{{\"app\": \"{app}\", \"ver\": \"{ver}\", \"dts\": \"{dts}\"}}"
          return jsonBuff
       except Exception as e:
-         return {f"exception: {str(e)}"}
+         return f"exception: {str(e)}"
 
 
 # -- test --

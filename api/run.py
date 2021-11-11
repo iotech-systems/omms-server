@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-import datetime
 import sys
-
+import datetime
 import flask as f
 import setproctitle
 import flask_restful as fr
