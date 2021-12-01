@@ -1,2 +1,1 @@
-# OpenMMS
-### Open Source Meter Management System
+# OpenMMS ### Open Source Meter Management System
