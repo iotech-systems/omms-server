@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<edges>
+    <edge hostname="omms-edge-p16" mac="b8:27:eb:47:0d:46" />
+    <edge hostname="omms-edge-b410" mac="b8:27:eb:97:f1:c4" />
+    <edge hostname="omms-edge-a5" mac="b8:27:eb:98:03:08" />
+    <edge hostname="omms-edge-roof" mac="b8:27:eb:91:f0:7b" />
+</edges>

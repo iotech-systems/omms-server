@@ -234,6 +234,12 @@ class databaseOps(object):
       qry = self.__json_rows__(qry)
       return self.dbCore.run_qry_fetch_scalar(qry)
 
+   def get_edgeLastPing(self, hostname: str):
+      qry = f"select t.* 'diagnostics'.edge_pings t where t.hostname = '{hostname}'" \
+         f" order by t.dts_utc desc limit 1;"
+      qry = self.__json_rows__(qry)
+      return self.dbCore.run_qry_fetch_scalar(qry)
+
    def __save_kwhrs__(self, jObj) -> (int, str):
       # - - - - - - - -
       jph: jsonPackageHead.jsonPackageHead = jsonPackageHead.jsonPackageHead(jObj)
