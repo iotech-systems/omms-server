@@ -15,6 +15,7 @@ logfile = "logs/dbops.log"
 level = logging.WARNING
 HISTOGRAM_POINTS_HR = 30
 LIVE_TBL_ROW_HRS_TTL = 24
+LIVE_TBL_ROW_DAYS_TTL = 7
 
 
 table_map = {"spaces": "reports.spaces", "clients": "reports.clients"}
@@ -277,7 +278,7 @@ class databaseOps(object):
          # - - - - - - - -
          # db: dbCore.dbCore = dbCore.dbCore()
          val = db.run_insert(ins)
-         self.__clear_live_tbl(tblName)
+         self.__clear_live_tbl__(tblName)
       # - - - - - - - -
       error = appErrorCodes.BAD_DB_INSERT
       if rowcount == 1:
@@ -343,7 +344,7 @@ class databaseOps(object):
             f", {l2_pwr_f.regVal}, {l3_pwr_f.regVal}, default);"
          # - - best try - -
          db.run_insert(ins)
-         self.__clear_live_tbl(tblName)
+         self.__clear_live_tbl__(tblName)
       # - - - - - - - - -
       error = appErrorCodes.BAD_DB_INSERT
       if rowcount == 1:
@@ -377,15 +378,17 @@ class databaseOps(object):
       except Exception as e:
          return 0
 
-   def __clear_live_tbl(self, tblName: str):
+   def __clear_live_tbl__(self, tblName: str):
       try:
          # - - test table name - -
          if not tblName.startswith("__"):
             raise Exception(f"BadTableName: {tblName}")
          # - - - - - -
-         qry = f"delete from streams.{tblName} where" \
-            f" (date_part('hour', timezone('utc', now())) - " \
-            f" date_part('hour', reading_dts_utc)) > {LIVE_TBL_ROW_HRS_TTL};"
+         # qry = f"delete from streams.{tblName} where" \
+         #   f" (date_part('hour', timezone('utc', now())) - " \
+         #   f" date_part('hour', reading_dts_utc)) > {LIVE_TBL_ROW_HRS_TTL};"
+         qry = f"delete from streams.\"{tblName}\" t where"\
+            f" date_part('day', timezone('utc', now()) - t.reading_dts_utc) > {LIVE_TBL_ROW_DAYS_TTL};"
          self.dbCore.run_exec(qry)
       except Exception as e:
          print(e)

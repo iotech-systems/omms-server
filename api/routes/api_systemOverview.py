@@ -1,7 +1,6 @@
 
-import json, flask
+import json
 import flask_restful as fr
-import core.data.databaseOps as dbOps
 import core.data.systemDatabaseOps as dbSysOps
 from routes.api_flask import api_flask
 
@@ -13,13 +12,11 @@ class api_sysOverview(fr.Resource):
       try:
          buffOut = []
          sysOps: dbSysOps.systemDatabaseOps = dbSysOps.systemDatabaseOps()
-
          # -- oneach --
          def oneach(edge: str):
             edgename, _ = edge
             edgestats = sysOps.get_edgeStatus(edgename)
             buffOut.append(edgestats)
-
          # -- get edges --
          edges: [] = sysOps.get_systemEdges()
          for e in edges:
